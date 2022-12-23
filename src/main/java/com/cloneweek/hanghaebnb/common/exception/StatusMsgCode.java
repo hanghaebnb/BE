@@ -30,6 +30,9 @@ public enum StatusMsgCode {
 //
 //    /* 409 CONFLICT : Resource의 현재 상태와 충돌, 보통 중복된 데이터 존재 */
     DUPLICATE_RESOURCE(HttpStatus.CONFLICT, "데이터가 이미 존재합니다."),
+    ALREADY_CLICKED_LIKE(HttpStatus.CONFLICT, "이미 좋아요를 눌렀습니다"),
+    ALREADY_CANCEL_LIKE(HttpStatus.CONFLICT, "이미 좋아요 취소를 눌렀습니다"),
+
 //
 //    /* 500 INTERNAL_SERVER_ERROR */
 //    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버가 없습니다.");
@@ -40,7 +43,9 @@ public enum StatusMsgCode {
     LIKE(HttpStatus.OK, "좋아요 성공"),
     CANCEL_LIKE(HttpStatus.OK, "좋아요 취소"),
     DELETE_POST(HttpStatus.OK, "게시글을 삭제하였습니다"),
-    DELETE_COMMENT(HttpStatus.OK, "댓글을 삭제하였습니다");
+    DELETE_COMMENT(HttpStatus.OK, "댓글을 삭제하였습니다"),
+    NICKNAME(HttpStatus.OK, "사용 가능한 닉네임입니다."),
+    EMAIL(HttpStatus.OK, "사용 가능한 이메일입니다.");
 
 
     private final HttpStatus httpStatus;
