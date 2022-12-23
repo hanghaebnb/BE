@@ -9,9 +9,7 @@ import com.cloneweek.hanghaebnb.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import javax.servlet.http.HttpServletResponse;
-
 import static com.cloneweek.hanghaebnb.common.exception.StatusMsgCode.*;
 
 @Service
