@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.cloneweek.hanghaebnb.entity.ImageFile;
+import com.cloneweek.hanghaebnb.entity.Room;
 import com.cloneweek.hanghaebnb.entity.User;
 import com.cloneweek.hanghaebnb.repository.ImageFileRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,24 +38,16 @@ public class AmazonS3Service {
     @Value("${cloud.aws.s3.bucket}")                                                        //bucket 이름
     public String bucket;
 
-//    public void upload(MultipartFile multipartFile, String dirName, Board board, User user) throws IOException { //일단 보드 뺌
-        public void upload(List<MultipartFile> multipartFilelist, String dirName, User user) throws IOException {
-            List<String> image = new ArrayList<>();
+
+        public void upload(List<MultipartFile> multipartFilelist, String dirName, Room room, User user) throws IOException {
 
             for (MultipartFile multipartFile : multipartFilelist){
                 if (multipartFile != null){
                     File uploadFile = convert(multipartFile).orElseThrow(() -> new IllegalArgumentException("파일 전환 실패"));
-                    ImageFile imageFile = new ImageFile(upload(uploadFile, dirName), user);
+                    ImageFile imageFile = new ImageFile(upload(uploadFile, dirName), user,room);
                     imageFileRepository.save(imageFile);
                 }
-
             }
-
-//        File uploadFile = convert(multipartFile).orElseThrow(() -> new IllegalArgumentException("파일 전환 실패"));
-//
-////        ImageFile imageFile = new ImageFile(upload(uploadFile, dirName), user, board); //일단 보드 뺌
-//        ImageFile imageFile = new ImageFile(upload(uploadFile, dirName), user);
-//        imageFileRepository.save(imageFile);
     }
 
     // S3로 파일 업로드하기

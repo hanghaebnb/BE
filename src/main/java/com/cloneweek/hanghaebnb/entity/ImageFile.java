@@ -20,9 +20,14 @@ public class ImageFile {
     @JoinColumn(name = "userid", nullable = false)
     private User user;                  // userid
 
-    public ImageFile(String path, User user) { // 임시 생성자
+    @OneToOne
+    @JoinColumn(name = "roomid", nullable = false)
+    private Room room;
+
+    public ImageFile(String path, User user, Room room) {
         this.path = path;
         this.user = user;
+        this.room = room;
     }
 
 

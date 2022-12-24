@@ -2,6 +2,7 @@ package com.cloneweek.hanghaebnb.service;
 
 import com.cloneweek.hanghaebnb.common.exception.CustomException;
 import com.cloneweek.hanghaebnb.common.exception.StatusMsgCode;
+import com.cloneweek.hanghaebnb.common.s3.AmazonS3Service;
 import com.cloneweek.hanghaebnb.common.security.UserDetailsImpl;
 import com.cloneweek.hanghaebnb.dto.ResponseMsgDto;
 import com.cloneweek.hanghaebnb.dto.RoomRequestDto;
@@ -14,7 +15,9 @@ import com.cloneweek.hanghaebnb.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,11 +27,16 @@ import java.util.Optional;
 public class RoomService {
     private final RoomRepository roomRepository;
     private final RoomLikeRepository roomLikeRepository;
+    private final AmazonS3Service s3Service;
 
     //숙소 정보 작성
-    public RoomResponseDto createRoom(RoomRequestDto requestDto, User user) {
-        Room room = new Room(requestDto, user);
+    public RoomResponseDto createRoom(RoomRequestDto requestDto, User user, List<MultipartFile> multipartFilelist) throws IOException {
+        Room room = new Room(requestDto,user);
         roomRepository.save(room);
+
+        if (multipartFilelist != null) {
+            s3Service.upload(multipartFilelist, "static", room, user);
+        }
         return new RoomResponseDto(room, user.getNickname());
     }
 
@@ -108,6 +116,6 @@ public class RoomService {
             throw new CustomException(StatusMsgCode.ALREADY_CANCEL_LIKE);
         }
         roomLikeRepository.deleteByRoomIdAndUserId(roomId, user.getId());
-        return new ResponseMsgDto(StatusMsgCode.LIKE);
+        return new ResponseMsgDto(StatusMsgCode.CANCEL_LIKE);
     }
 }

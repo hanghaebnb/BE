@@ -6,10 +6,13 @@ import com.cloneweek.hanghaebnb.dto.RoomRequestDto;
 import com.cloneweek.hanghaebnb.dto.RoomResponseDto;
 import com.cloneweek.hanghaebnb.service.RoomService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -19,9 +22,11 @@ public class RoomController {
     private final RoomService roomService;
 
     //숙소 등록
-    @PostMapping("/rooms")
-    public ResponseEntity<RoomResponseDto> createRoom(@RequestBody RoomRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseEntity.ok(roomService.createRoom(requestDto, userDetails.getUser()));
+    @PostMapping(value = "/rooms",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<RoomResponseDto> createRoom(@RequestPart RoomRequestDto requestDto,
+                                                      @RequestPart List<MultipartFile> multipartFilelist,
+                                                      @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+        return ResponseEntity.ok(roomService.createRoom(requestDto, userDetails.getUser(),multipartFilelist));
     }
 
     //숙소 전체 조회
