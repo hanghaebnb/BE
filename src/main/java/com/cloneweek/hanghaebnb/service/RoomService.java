@@ -7,9 +7,11 @@ import com.cloneweek.hanghaebnb.common.security.UserDetailsImpl;
 import com.cloneweek.hanghaebnb.dto.ResponseMsgDto;
 import com.cloneweek.hanghaebnb.dto.RoomRequestDto;
 import com.cloneweek.hanghaebnb.dto.RoomResponseDto;
+import com.cloneweek.hanghaebnb.entity.ImageFile;
 import com.cloneweek.hanghaebnb.entity.Room;
 import com.cloneweek.hanghaebnb.entity.RoomLike;
 import com.cloneweek.hanghaebnb.entity.User;
+import com.cloneweek.hanghaebnb.repository.ImageFileRepository;
 import com.cloneweek.hanghaebnb.repository.RoomLikeRepository;
 import com.cloneweek.hanghaebnb.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ import java.util.Optional;
 public class RoomService {
     private final RoomRepository roomRepository;
     private final RoomLikeRepository roomLikeRepository;
+    private final ImageFileRepository imageFileRepository;
     private final AmazonS3Service s3Service;
 
     //숙소 정보 작성
@@ -77,7 +80,18 @@ public class RoomService {
                 () -> new CustomException(StatusMsgCode.ROOM_NOT_FOUND)
         );
         if (room.getUser().getNickname().equals(user.getNickname())) {
-            roomRepository.deleteById(roomId);
+            roomLikeRepository.deleteAllByRoom(room); // 룸에 해당하는 좋아요 삭제
+
+            List<ImageFile> imageFileList = imageFileRepository.findAllByRoom(room);
+            for (ImageFile imageFile : imageFileList){
+                String path = imageFile.getPath();
+                String filename = path.substring(58);
+                s3Service.deleteFile(filename);
+            }
+
+            imageFileRepository.deleteAllByRoom(room); // 룸에 해당하는 이미지 파일 삭제
+
+            roomRepository.deleteById(roomId); // 최종적 룸 삭제
         } else {
             throw new CustomException(StatusMsgCode.INVALID_USER);
         }
