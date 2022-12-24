@@ -1,11 +1,12 @@
 package com.cloneweek.hanghaebnb.entity;
 
 import com.cloneweek.hanghaebnb.dto.RoomRequestDto;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -32,9 +33,12 @@ public class Room extends Timestamped {
     private int price;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userid", nullable = false)
     @JsonIgnore
+    @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
+    private List<RoomLike> likeList = new ArrayList<>();
 
     public Room(RoomRequestDto requestDto, User user){
         this.title = requestDto.getTitle();
