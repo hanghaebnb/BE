@@ -31,15 +31,17 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // CSRF 설정
         http.csrf().disable();
+
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
         http.httpBasic().disable()
                 .authorizeRequests()
                 .antMatchers("/api/users/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/**").permitAll()
+
                 .anyRequest().authenticated()
                 .and()
-                .addFilterBefore(new JwtAuthFilter(jwtUtil),
-                        UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthFilter(jwtUtil),UsernamePasswordAuthenticationFilter.class);
         http.cors();
 
         return http.build();
