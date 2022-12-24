@@ -3,6 +3,8 @@ package com.cloneweek.hanghaebnb.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Pattern;
+
 @Getter
 @NoArgsConstructor
 public class SignupRequestDto {
