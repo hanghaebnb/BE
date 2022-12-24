@@ -43,6 +43,7 @@ public enum StatusMsgCode {
     LIKE(HttpStatus.OK, "좋아요 성공"),
     CANCEL_LIKE(HttpStatus.OK, "좋아요 취소"),
     DELETE_POST(HttpStatus.OK, "게시글을 삭제하였습니다"),
+    DONE_POST(HttpStatus.OK, "숙소 등록 완료"),
     DELETE_COMMENT(HttpStatus.OK, "댓글을 삭제하였습니다"),
     NICKNAME(HttpStatus.OK, "사용 가능한 닉네임입니다."),
     EMAIL(HttpStatus.OK, "사용 가능한 이메일입니다.");
