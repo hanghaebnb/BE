@@ -9,7 +9,6 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,9 +22,25 @@ public class User {
     @Column(nullable = false)
     private String nickname;
 
+    private Long kakaoId;
+
+
     public User(String email, String password, String nickname) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
     }
+
+    public User(String email, String password, String nickname, Long kakaoId) {
+        this.email = email;
+        this.password = password;
+        this.kakaoId = kakaoId;
+        this.nickname = nickname;
+    }
+
+    public User kakaoIdUpdate(Long kakaoId) {
+        this.kakaoId = kakaoId;
+        return this;
+    }
+
 }
