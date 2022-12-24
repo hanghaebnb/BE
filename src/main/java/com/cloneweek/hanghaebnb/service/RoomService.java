@@ -3,7 +3,6 @@ package com.cloneweek.hanghaebnb.service;
 import com.cloneweek.hanghaebnb.common.exception.CustomException;
 import com.cloneweek.hanghaebnb.common.exception.StatusMsgCode;
 import com.cloneweek.hanghaebnb.common.s3.AmazonS3Service;
-import com.cloneweek.hanghaebnb.common.security.UserDetailsImpl;
 import com.cloneweek.hanghaebnb.dto.ResponseMsgDto;
 import com.cloneweek.hanghaebnb.dto.RoomRequestDto;
 import com.cloneweek.hanghaebnb.dto.RoomResponseDto;
@@ -33,34 +32,35 @@ public class RoomService {
     private final AmazonS3Service s3Service;
 
     //숙소 정보 작성
-    public RoomResponseDto createRoom(RoomRequestDto requestDto, User user, List<MultipartFile> multipartFilelist) throws IOException {
-        Room room = new Room(requestDto,user);
+    public ResponseMsgDto createRoom(RoomRequestDto requestDto, User user, List<MultipartFile> multipartFilelist) throws IOException {
+        Room room = new Room(requestDto, user);
         roomRepository.save(room);
 
         if (multipartFilelist != null) {
             s3Service.upload(multipartFilelist, "static", room, user);
         }
-        return new RoomResponseDto(room, user.getNickname());
+        return new ResponseMsgDto(StatusMsgCode.DONE_POST);
     }
 
     //숙소 정보 전체 조회
     @Transactional(readOnly = true)
     public List<RoomResponseDto> getRooms(User user) {
 
-        List<Room> roomList = roomRepository.findAllByOrderByModifiedAtAsc();
+        List<Room> roomList = roomRepository.findAllByOrderByCreatedAtDesc();
         List<RoomResponseDto> roomResponseDto = new ArrayList<>();
         for (Room room : roomList) {
             roomResponseDto.add(new RoomResponseDto(
                     room,
                     user.getNickname(),
-                    (checkLike(room.getId(),user))));
+                    (checkLike(room.getId(), user))));
         }
         return roomResponseDto;
     }
 
     //숙소 정보 수정
     @Transactional
-    public RoomResponseDto update(Long roomId, RoomRequestDto requestDto, User user) {
+    public RoomResponseDto update(Long roomId, RoomRequestDto requestDto, User user, List<MultipartFile> multipartFilelist) throws IOException {
+
         Room room = roomRepository.findById(roomId).orElseThrow(
                 () -> new CustomException(StatusMsgCode.ROOM_NOT_FOUND)
         );
@@ -70,8 +70,23 @@ public class RoomService {
             throw new CustomException(StatusMsgCode.INVALID_USER);
         }
 
+        if (multipartFilelist != null) {
+
+            List<ImageFile> imageFileList = imageFileRepository.findAllByRoom(room);
+
+            for (ImageFile File : imageFileList) {
+                String path = File.getPath();
+                String filename = path.substring(56);
+                s3Service.deleteFile(filename);
+            }
+
+            imageFileRepository.deleteAll(imageFileList);
+
+            s3Service.upload(multipartFilelist, "static", room, user);
+        }
         return new RoomResponseDto(room, user.getNickname());
     }
+
 
     //숙소 정보 삭제
     @Transactional
@@ -83,7 +98,7 @@ public class RoomService {
             roomLikeRepository.deleteAllByRoom(room); // 룸에 해당하는 좋아요 삭제
 
             List<ImageFile> imageFileList = imageFileRepository.findAllByRoom(room);
-            for (ImageFile imageFile : imageFileList){
+            for (ImageFile imageFile : imageFileList) {
                 String path = imageFile.getPath();
                 String filename = path.substring(58);
                 s3Service.deleteFile(filename);

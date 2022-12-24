@@ -23,8 +23,8 @@ public class RoomController {
 
     //숙소 등록
     @PostMapping(value = "/rooms",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<RoomResponseDto> createRoom(@RequestPart RoomRequestDto requestDto,
-                                                      @RequestPart List<MultipartFile> multipartFilelist,
+    public ResponseEntity<ResponseMsgDto> createRoom(@RequestPart(value = "data") RoomRequestDto requestDto,
+                                                      @RequestPart(value = "file")  List<MultipartFile> multipartFilelist,
                                                       @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         return ResponseEntity.ok(roomService.createRoom(requestDto, userDetails.getUser(),multipartFilelist));
     }
@@ -36,9 +36,13 @@ public class RoomController {
     }
 
     //숙수 정보 수정
+    @CrossOrigin
     @PatchMapping("/rooms/{roomId}")
-    public ResponseEntity<RoomResponseDto> updateRoom(@PathVariable Long roomId, @RequestBody RoomRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseEntity.ok(roomService.update(roomId, requestDto, userDetails.getUser()));
+    public ResponseEntity<RoomResponseDto> updateRoom(@PathVariable Long roomId,
+                                                      @RequestPart(value = "data") RoomRequestDto requestDto,
+                                                      @RequestPart(value = "file")  List<MultipartFile> multipartFilelist,
+                                                      @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+        return ResponseEntity.ok(roomService.update(roomId, requestDto, userDetails.getUser(),multipartFilelist));
     }
 
     //숙소 삭제

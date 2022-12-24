@@ -3,7 +3,6 @@ package com.cloneweek.hanghaebnb.common.s3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
-import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.cloneweek.hanghaebnb.entity.ImageFile;
 import com.cloneweek.hanghaebnb.entity.Room;
@@ -12,7 +11,6 @@ import com.cloneweek.hanghaebnb.repository.ImageFileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -44,7 +41,7 @@ public class AmazonS3Service {
             for (MultipartFile multipartFile : multipartFilelist){
                 if (multipartFile != null){
                     File uploadFile = convert(multipartFile).orElseThrow(() -> new IllegalArgumentException("파일 전환 실패"));
-                    ImageFile imageFile = new ImageFile(upload(uploadFile, dirName), user,room);
+                    ImageFile imageFile = new ImageFile(upload(uploadFile, dirName), user,room); //url, user, room 정보 저장
                     imageFileRepository.save(imageFile);
                 }
             }

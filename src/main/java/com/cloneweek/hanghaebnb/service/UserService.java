@@ -54,7 +54,7 @@ public class UserService {
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getEmail()));
     }
 
-    // 이메일 중복 확인
+    // 이메일 중복 확인![](../../../../../../../../../../../../var/folders/xk/3gkgv3bx0_nblhjbg014mwwm0000gn/T/TemporaryItems/NSIRD_screencaptureui_5UuEnp/Screenshot 2022-12-24 at 5.30.53 PM.png)
     public void emailCheck(SignupRequestDto dto) {
         String email = dto.getEmail();
 
