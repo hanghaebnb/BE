@@ -21,10 +21,10 @@ public class AmazonS3Controller {
 
     private final AmazonS3Service s3Service;
 
-    @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public String uploadImage(@RequestPart List<MultipartFile> imagelist,
-                              @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException{
-       s3Service.upload(imagelist,"static",userDetails.getUser());
-       return "success";
-    }
+    // @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    // public String uploadImage(@RequestPart List<MultipartFile> imagelist,
+    //                           @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException{
+    //    s3Service.upload(imagelist,"static",userDetails.getUser());
+    //    return "success";
+    // }
 }
