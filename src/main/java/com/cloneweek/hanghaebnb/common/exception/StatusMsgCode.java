@@ -15,7 +15,7 @@ public enum StatusMsgCode {
     EXIST_NICK(HttpStatus.BAD_REQUEST, "중복된 닉네임입니다."),
     INVALID_AUTH_TOKEN(HttpStatus.BAD_REQUEST, "토큰이 유효하지 않습니다."),
     BAD_ID_PASSWORD(HttpStatus.BAD_REQUEST, "아이디나 비밀번호 패턴이 맞지 않습니다."),
-    PRODUCT_NOT_FOUND(HttpStatus.BAD_REQUEST, "게시글을 찾을 수 없습니다."),
+    ROOM_NOT_FOUND(HttpStatus.BAD_REQUEST, "게시글을 찾을 수 없습니다."),
     COMMENT_NOT_FOUND(HttpStatus.BAD_REQUEST, "댓글을 찾을 수 없습니다."),
     INVALID_USER(HttpStatus.BAD_REQUEST, "작성자만 삭제/수정할 수 있습니다."),
 
@@ -30,6 +30,9 @@ public enum StatusMsgCode {
 //
 //    /* 409 CONFLICT : Resource의 현재 상태와 충돌, 보통 중복된 데이터 존재 */
     DUPLICATE_RESOURCE(HttpStatus.CONFLICT, "데이터가 이미 존재합니다."),
+    ALREADY_CLICKED_LIKE(HttpStatus.CONFLICT, "이미 좋아요를 눌렀습니다"),
+    ALREADY_CANCEL_LIKE(HttpStatus.CONFLICT, "이미 좋아요 취소를 눌렀습니다"),
+
 //
 //    /* 500 INTERNAL_SERVER_ERROR */
 //    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버가 없습니다.");
@@ -40,7 +43,10 @@ public enum StatusMsgCode {
     LIKE(HttpStatus.OK, "좋아요 성공"),
     CANCEL_LIKE(HttpStatus.OK, "좋아요 취소"),
     DELETE_POST(HttpStatus.OK, "게시글을 삭제하였습니다"),
-    DELETE_COMMENT(HttpStatus.OK, "댓글을 삭제하였습니다");
+    DONE_POST(HttpStatus.OK, "숙소 등록 완료"),
+    DELETE_COMMENT(HttpStatus.OK, "댓글을 삭제하였습니다"),
+    NICKNAME(HttpStatus.OK, "사용 가능한 닉네임입니다."),
+    EMAIL(HttpStatus.OK, "사용 가능한 이메일입니다.");
 
 
     private final HttpStatus httpStatus;
