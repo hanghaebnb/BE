@@ -33,6 +33,7 @@ public class Room extends Timestamped {
     private int price;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
 

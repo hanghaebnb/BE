@@ -14,6 +14,11 @@ import com.cloneweek.hanghaebnb.repository.ImageFileRepository;
 import com.cloneweek.hanghaebnb.repository.RoomLikeRepository;
 import com.cloneweek.hanghaebnb.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,17 +49,24 @@ public class RoomService {
 
     //숙소 정보 전체 조회
     @Transactional(readOnly = true)
-    public List<RoomResponseDto> getRooms(User user) {
+    public Page<Room> getRooms(Pageable pageable, User user) {
 
-        List<Room> roomList = roomRepository.findAllByOrderByCreatedAtDesc();
-        List<RoomResponseDto> roomResponseDto = new ArrayList<>();
-        for (Room room : roomList) {
-            roomResponseDto.add(new RoomResponseDto(
-                    room,
-                    user.getNickname(),
-                    (checkLike(room.getId(), user))));
-        }
-        return roomResponseDto;
+        // 페이징 처리
+        // 작성날짜 순으로 정렬
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+        Page<Room> rooms = roomRepository.findAll(pageable);
+
+//        List<Room> roomList = roomRepository.findAllByOrderByCreatedAtDesc();
+//        List<RoomResponseDto> roomResponseDto = new ArrayList<>();
+//        for (Room room : roomList) {
+//          roomResponseDto.add(new RoomResponseDto(
+//                  room,
+//                  user.getNickname(),
+//                  (checkLike(room.getId(), user))));
+//      }
+        return rooms;
     }
 
     //숙소 정보 수정

@@ -4,8 +4,11 @@ import com.cloneweek.hanghaebnb.common.security.UserDetailsImpl;
 import com.cloneweek.hanghaebnb.dto.ResponseMsgDto;
 import com.cloneweek.hanghaebnb.dto.RoomRequestDto;
 import com.cloneweek.hanghaebnb.dto.RoomResponseDto;
+import com.cloneweek.hanghaebnb.entity.Room;
 import com.cloneweek.hanghaebnb.service.RoomService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,8 +34,8 @@ public class RoomController {
 
     //숙소 전체 조회
     @GetMapping("/rooms")
-    public ResponseEntity<List<RoomResponseDto>> getRooms(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseEntity.ok(roomService.getRooms(userDetails.getUser()));
+    public ResponseEntity<Page<Room>> getRooms(@AuthenticationPrincipal UserDetailsImpl userDetails, Pageable pageable) { // size /api/rooms?page=0&size=3
+        return ResponseEntity.ok(roomService.getRooms(pageable, userDetails.getUser()));
     }
 
     //숙수 정보 수정
