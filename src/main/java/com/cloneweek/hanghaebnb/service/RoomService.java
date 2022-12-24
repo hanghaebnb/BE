@@ -9,6 +9,10 @@ import com.cloneweek.hanghaebnb.entity.Room;
 import com.cloneweek.hanghaebnb.entity.User;
 import com.cloneweek.hanghaebnb.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,15 +31,22 @@ public class RoomService {
         return new RoomResponseDto(room, user.getNickname());
     }
 
-    public List<RoomResponseDto> getRooms() {
+    public Page<Room> getRooms(Pageable pageable) {
 
-        List<Room> roomList = roomRepository.findAllByOrderByModifiedAtAsc();
-        List<RoomResponseDto> roomResponseDto = new ArrayList<>();
-        for(Room room : roomList){
-            RoomResponseDto roomDto = new RoomResponseDto(room, room.getUser().getNickname());
-            roomResponseDto.add(roomDto);
-        }
-        return roomResponseDto;
+        // 페이징 처리
+        // 작성날짜 순으로 정렬
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+        Page<Room> rooms = roomRepository.findAll(pageable);
+
+//        List<Room> roomList = roomRepository.findAllByOrderByModifiedAtAsc();
+//        List<RoomResponseDto> roomResponseDto = new ArrayList<>();
+//        for(Room room : roomList){
+//            RoomResponseDto roomDto = new RoomResponseDto(room, room.getUser().getNickname());
+//            roomResponseDto.add(roomDto);
+//        }
+        return rooms;
     }
     @Transactional
     public RoomResponseDto update(Long roomId, RoomRequestDto requestDto, User user){

@@ -33,6 +33,7 @@ public class Room extends Timestamped {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userid", nullable = false)
+    @JsonIgnore
     private User user;
 
     public Room(RoomRequestDto requestDto, User user){

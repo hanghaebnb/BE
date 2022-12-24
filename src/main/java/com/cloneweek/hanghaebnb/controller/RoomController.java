@@ -4,8 +4,11 @@ import com.cloneweek.hanghaebnb.common.security.UserDetailsImpl;
 import com.cloneweek.hanghaebnb.dto.ResponseMsgDto;
 import com.cloneweek.hanghaebnb.dto.RoomRequestDto;
 import com.cloneweek.hanghaebnb.dto.RoomResponseDto;
+import com.cloneweek.hanghaebnb.entity.Room;
 import com.cloneweek.hanghaebnb.service.RoomService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +27,8 @@ public class RoomController {
     }
 
     @GetMapping("/rooms")
-    public ResponseEntity<List<RoomResponseDto>> getRooms() {
-        return ResponseEntity.ok(roomService.getRooms());
+    public ResponseEntity<Page<Room>> getRooms(Pageable pageable) { // size /api/rooms?page=0&size=3
+        return ResponseEntity.ok(roomService.getRooms(pageable));
     }
 
     @PatchMapping("/rooms/{roomId}")
