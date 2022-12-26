@@ -3,7 +3,6 @@ package com.cloneweek.hanghaebnb.dto;
 import com.cloneweek.hanghaebnb.common.exception.StatusMsgCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
 
 @Getter
 @NoArgsConstructor
@@ -20,6 +19,5 @@ public class ResponseMsgDto {
     public ResponseMsgDto(StatusMsgCode statusMsgCode){
         this.statusCode = statusMsgCode.getHttpStatus().value();
         this.message = statusMsgCode.getDetail();
-
     }
 }
