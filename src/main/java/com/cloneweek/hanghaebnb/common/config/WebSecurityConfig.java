@@ -37,8 +37,8 @@ public class WebSecurityConfig {
         http.httpBasic().disable()
                 .authorizeRequests()
                 .antMatchers("/api/users/**").permitAll()
+                .antMatchers("/emailLogin").permitAll()
                 .antMatchers(HttpMethod.GET, "/**").permitAll()
-
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JwtAuthFilter(jwtUtil),UsernamePasswordAuthenticationFilter.class);

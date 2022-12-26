@@ -33,6 +33,9 @@ dependencies {
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+    // 이메일 인증을 위한 설정
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
     // s3 설정 관련
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 }
