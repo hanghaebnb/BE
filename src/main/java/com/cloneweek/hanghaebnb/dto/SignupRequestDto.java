@@ -9,7 +9,7 @@ import javax.validation.constraints.Pattern;
 @NoArgsConstructor
 public class SignupRequestDto {
 
-    @Pattern(regexp = "[a-z0-9]{4,10}")
+//    @Pattern(regexp = "[a-z0-9]{4,10}")
     private String email;
 
     @Pattern(regexp = "[a-z0-9A-Z!@#$%^&*]{8,15}")

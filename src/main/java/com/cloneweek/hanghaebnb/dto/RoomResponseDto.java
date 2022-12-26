@@ -34,8 +34,8 @@ public class RoomResponseDto {
 
     }
 
-    public RoomResponseDto(Room room, String nickname, boolean likeCheck){
-        this.nickname = nickname;
+    public RoomResponseDto(Room room, boolean likeCheck){
+        this.nickname = room.getUser().getNickname();
         this.id = room.getId();
         this.title = room.getTitle();
         this.type = room.getType();
