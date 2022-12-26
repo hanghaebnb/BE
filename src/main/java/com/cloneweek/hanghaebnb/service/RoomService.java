@@ -68,6 +68,24 @@ public class RoomService {
         return roomResponseDto;
     }
 
+    //숙소 키워드 검색
+    @Transactional(readOnly = true)
+    public List<RoomResponseDto> search(String keyword, Pageable pageable, User user) {
+        // 페이징 처리
+        // 작성날짜 순으로 정렬
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+
+        Page<Room> roomList = roomRepository.findByTitleContaining(keyword, pageable);
+        List<RoomResponseDto> roomResponseDtos = new ArrayList<>();
+        for(Room room : roomList){
+            roomResponseDtos.add(new RoomResponseDto(room, (checkLike(room.getId(), user))));
+        }
+
+        return roomResponseDtos;
+    }
+
     //숙소 정보 수정
 //    @Transactional
 //    public RoomResponseDto update(Long roomId, RoomRequestDto requestDto, User user, List<MultipartFile> multipartFilelist) throws IOException {
@@ -126,7 +144,6 @@ public class RoomService {
 
         return new RoomResponseDto(room, user.getNickname());
     }
-
 
     //숙소 정보 삭제
 //    @Transactional
