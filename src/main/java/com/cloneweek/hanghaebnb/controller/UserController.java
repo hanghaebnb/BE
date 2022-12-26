@@ -56,7 +56,7 @@ public class UserController {
     }
 
     @GetMapping("/kakao/callback")
-    public String kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+    public ResponseEntity<ResponseMsgDto> kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
         // code: 카카오 서버로부터 받은 인가 코드
         String createToken = kakaoService.kakaoLogin(code, response);
 
@@ -65,7 +65,7 @@ public class UserController {
         cookie.setPath("/");
         response.addCookie(cookie);
 
-        return "redirect:/api/shop";
+        return ResponseEntity.ok(new ResponseMsgDto(StatusMsgCode.LOG_IN));
     }
 }
 

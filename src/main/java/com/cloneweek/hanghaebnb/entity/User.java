@@ -31,11 +31,11 @@ public class User {
         this.nickname = nickname;
     }
 
-    public User(String email, String password, String nickname, Long kakaoId) {
+    public User(String email, String password, Long kakaoId, String kakaoNickname) {
         this.email = email;
         this.password = password;
         this.kakaoId = kakaoId;
-        this.nickname = nickname;
+        this.nickname = kakaoNickname;
     }
 
     public User kakaoIdUpdate(Long kakaoId) {

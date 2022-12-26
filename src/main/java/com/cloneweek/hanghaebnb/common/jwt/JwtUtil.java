@@ -42,12 +42,12 @@ public class JwtUtil {
     }
 
     // 토큰 생성
-    public String createToken(String email){
+    public String createToken(String username){
         Date date = new Date();
 
         return BEARER_PREFIX +
                 Jwts.builder()
-                        .setSubject(email)
+                        .setSubject(username)
                         .setExpiration(new Date(date.getTime() + TOKEN_TIME))
                         .setIssuedAt(date)
                         .signWith(key, signatureAlgorithm)
@@ -83,8 +83,8 @@ public class JwtUtil {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 
-    public Authentication createAuthentication(String email) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+    public Authentication createAuthentication(String username) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 }

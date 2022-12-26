@@ -20,5 +20,4 @@ ErrorResponse {
                         .message(statusMsgCode.getDetail())
                         .build());
     }
-
 }
