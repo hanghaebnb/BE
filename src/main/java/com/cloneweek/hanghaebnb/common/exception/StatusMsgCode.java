@@ -19,6 +19,9 @@ public enum StatusMsgCode {
     COMMENT_NOT_FOUND(HttpStatus.BAD_REQUEST, "댓글을 찾을 수 없습니다."),
     INVALID_USER(HttpStatus.BAD_REQUEST, "작성자만 삭제/수정할 수 있습니다."),
 
+    FILE_UPLOAD_FAILED(HttpStatus.BAD_REQUEST, "파일 업로드 실패"),
+    FILE_DELETE_FAILED(HttpStatus.BAD_REQUEST, "파일 삭제 실패"),
+
     //    /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
 //    INVALID_AUTH_TOKEN(HttpStatus.UNAUTHORIZED, "권한 정보가 없는 토큰입니다."),
 //    UNAUTHORIZED_USER(HttpStatus.UNAUTHORIZED, "존재하지 않는 유저입니다."),
