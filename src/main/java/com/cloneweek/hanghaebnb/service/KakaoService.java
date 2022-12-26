@@ -32,16 +32,16 @@ public class KakaoService {
 
     public String kakaoLogin(String code, HttpServletResponse response) throws JsonProcessingException {
         // 1. "인가 코드"로 "액세스 토큰" 요청
-//        String accessToken = getToken(code);
+//        String accessToken = getToken(code);                                  // 포스트맨 확인위해 주석처리 해둠.
 
         // 2. 토큰으로 카카오 API 호출 : "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
-        KakaoUserInfoDto kakaoUserInfo = getKakaoUserInfo(code);
+        KakaoUserInfoDto kakaoUserInfo = getKakaoUserInfo(code);                // 포스트맨 확인위해 accessToken에서 code로 바꿔둠
 
         // 3. 필요시에 회원가입
         User kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo);
 
         // 4. JWT 토큰 반환
-        String createToken =  jwtUtil.createToken(kakaoUser.getNickname());  //(방법2)
+        String createToken =  jwtUtil.createToken(kakaoUser.getEmail());  //(방법2)
 //        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, createToken);                            (방법1)
         //JWT토큰 만들어서 클라이언트에 보낸 다음에 클라이언트에서 직접 쿠키를 저장하는 방식으로 구현가능 (방법1)
         //서버에서 바로 그냥 쿠키 객체를 만들어서 토큰에 직접 넣어서 반환하는 방법도 있음 (방법2)
@@ -134,12 +134,11 @@ public class KakaoService {
                 // email: kakao email
                 String email = kakaoUserInfo.getEmail();
 
-                kakaoUser = new User(email, encodedPassword, kakaoUserInfo.getEmail(), kakaoId);
-            }
+                kakaoUser = new User(email, encodedPassword, kakaoId, kakaoUserInfo.getNickname());
 
+            }
             userRepository.save(kakaoUser);
         }
         return kakaoUser;
     }
-
 }
