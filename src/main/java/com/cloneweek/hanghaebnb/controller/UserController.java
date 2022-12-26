@@ -43,16 +43,14 @@ public class UserController {
 
     // 이메일 중복 확인
     @PostMapping("/email-check")
-    public ResponseEntity<ResponseMsgDto> idCheck(@RequestBody @Valid SignupRequestDto dto) {
-        userService.emailCheck(dto);
-        return ResponseEntity.ok(new ResponseMsgDto(StatusMsgCode.EMAIL));
+    public ResponseEntity<ResponseMsgDto> emailCheck(@RequestBody @Valid SignupRequestDto dto) {
+        return ResponseEntity.ok(userService.emailCheck(dto));
     }
 
     // 닉네임 중복 확인
     @PostMapping("/nick-check")
     public ResponseEntity<ResponseMsgDto> nickCheck(@RequestBody SignupRequestDto dto) {
-        userService.nickCheck(dto);
-        return ResponseEntity.ok(new ResponseMsgDto(StatusMsgCode.NICKNAME));
+        return ResponseEntity.ok(userService.nickCheck(dto));
     }
 
     @GetMapping("/kakao/callback")

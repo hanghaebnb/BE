@@ -3,6 +3,8 @@ package com.cloneweek.hanghaebnb.service;
 import com.cloneweek.hanghaebnb.common.exception.CustomException;
 import com.cloneweek.hanghaebnb.common.jwt.JwtUtil;
 import com.cloneweek.hanghaebnb.dto.LoginRequestDto;
+import com.cloneweek.hanghaebnb.dto.ResponseBoolDto;
+import com.cloneweek.hanghaebnb.dto.ResponseMsgDto;
 import com.cloneweek.hanghaebnb.dto.SignupRequestDto;
 import com.cloneweek.hanghaebnb.entity.User;
 import com.cloneweek.hanghaebnb.repository.UserRepository;
@@ -54,22 +56,16 @@ public class UserService {
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getEmail()));
     }
 
-    // 이메일 중복 확인![](../../../../../../../../../../../../var/folders/xk/3gkgv3bx0_nblhjbg014mwwm0000gn/T/TemporaryItems/NSIRD_screencaptureui_5UuEnp/Screenshot 2022-12-24 at 5.30.53 PM.png)
-    public void emailCheck(SignupRequestDto dto) {
-        String email = dto.getEmail();
-
-        if(userRepository.findByEmail(email).isPresent()) {
-            throw new CustomException(EXIST_USER);
-        }
+    // 이메일 중복 확인
+    public ResponseMsgDto emailCheck(SignupRequestDto dto) {
+        Boolean flag = userRepository.existsByEmail(dto.getEmail());
+        return new ResponseBoolDto(flag ? EXIST_USER : EMAIL, flag);
     }
 
     // 닉네임 중복 확인
-    public void nickCheck(SignupRequestDto dto) {
-        String nickname = dto.getNickname();
-
-        if(userRepository.findByNickname(nickname).isPresent()) {
-            throw new CustomException(EXIST_NICK);
-        }
+    public ResponseMsgDto nickCheck(SignupRequestDto dto) {
+        Boolean flag = userRepository.existsByNickname(dto.getNickname());
+        return new ResponseBoolDto(flag ? EXIST_NICK : NICKNAME, flag);
     }
 }
 
