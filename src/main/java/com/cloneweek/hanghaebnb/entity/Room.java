@@ -1,6 +1,7 @@
 package com.cloneweek.hanghaebnb.entity;
 
 import com.cloneweek.hanghaebnb.dto.RoomRequestDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
