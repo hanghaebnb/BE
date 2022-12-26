@@ -63,7 +63,6 @@ public class RoomService {
         for (Room room : roomList) {
           roomResponseDto.add(new RoomResponseDto(
                   room,
-                  user.getNickname(),
                   (checkLike(room.getId(), user))));
         }
         return roomResponseDto;

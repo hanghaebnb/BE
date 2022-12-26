@@ -17,11 +17,11 @@ public class ImageFile {
     private String path;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userid", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;                  // userid
 
     @OneToOne
-    @JoinColumn(name = "roomid", nullable = false)
+    @JoinColumn(name = "room_id", nullable = false)
     private Room room;
 
     public ImageFile(String path, User user, Room room) {
