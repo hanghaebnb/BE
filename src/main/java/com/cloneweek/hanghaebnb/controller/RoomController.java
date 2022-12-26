@@ -34,7 +34,7 @@ public class RoomController {
 
     //숙소 전체 조회
     @GetMapping("/rooms")
-    public ResponseEntity<Page<Room>> getRooms(@AuthenticationPrincipal UserDetailsImpl userDetails, Pageable pageable) { // size /api/rooms?page=0&size=3
+    public ResponseEntity<List<RoomResponseDto>> getRooms(@AuthenticationPrincipal UserDetailsImpl userDetails, Pageable pageable) { // size /api/rooms?page=0&size=3
         return ResponseEntity.ok(roomService.getRooms(pageable, userDetails.getUser()));
     }
 

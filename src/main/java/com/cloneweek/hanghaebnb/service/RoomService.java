@@ -49,24 +49,24 @@ public class RoomService {
 
     //숙소 정보 전체 조회
     @Transactional(readOnly = true)
-    public Page<Room> getRooms(Pageable pageable, User user) {
+    public List<RoomResponseDto> getRooms(Pageable pageable, User user) {
 
         // 페이징 처리
         // 작성날짜 순으로 정렬
         Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
 
         pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
-        Page<Room> rooms = roomRepository.findAll(pageable);
+//        Page<Room> rooms = roomRepository.findAll(pageable);
 
-//        List<Room> roomList = roomRepository.findAllByOrderByCreatedAtDesc();
-//        List<RoomResponseDto> roomResponseDto = new ArrayList<>();
-//        for (Room room : roomList) {
-//          roomResponseDto.add(new RoomResponseDto(
-//                  room,
-//                  user.getNickname(),
-//                  (checkLike(room.getId(), user))));
-//      }
-        return rooms;
+        Page<Room> roomList = roomRepository.findAll(pageable);
+        List<RoomResponseDto> roomResponseDto = new ArrayList<>();
+        for (Room room : roomList) {
+          roomResponseDto.add(new RoomResponseDto(
+                  room,
+                  user.getNickname(),
+                  (checkLike(room.getId(), user))));
+        }
+        return roomResponseDto;
     }
 
     //숙소 정보 수정
