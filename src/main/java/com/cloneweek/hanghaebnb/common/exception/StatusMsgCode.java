@@ -49,7 +49,8 @@ public enum StatusMsgCode {
     DONE_POST(HttpStatus.OK, "숙소 등록 완료"),
     DELETE_COMMENT(HttpStatus.OK, "댓글을 삭제하였습니다"),
     NICKNAME(HttpStatus.OK, "사용 가능한 닉네임입니다."),
-    EMAIL(HttpStatus.OK, "사용 가능한 이메일입니다.");
+    EMAIL(HttpStatus.OK, "사용 가능한 이메일입니다."),
+    UPDATE(HttpStatus.OK, "게시글 수정 완료");
 
 
     private final HttpStatus httpStatus;
