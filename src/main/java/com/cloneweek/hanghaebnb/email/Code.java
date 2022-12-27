@@ -2,7 +2,6 @@ package com.cloneweek.hanghaebnb.email;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 
 @Getter

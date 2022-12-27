@@ -28,6 +28,7 @@ public class EmailService {
     private final CodeRepository codeRepository;
 
 
+    // 랜덤하게 만든 인증코드 메일로 발송하는 메서드
     public String sendSimpleMessage(String email) throws Exception {
         if(userRepository.findByEmail(email).isPresent()) {
             throw new CustomException(EXIST_USER);
@@ -36,6 +37,7 @@ public class EmailService {
         StringBuffer key = new StringBuffer();
         Random rnd = new Random();
 
+        // 인증코드 랜덤하게 만들기. 인증 요청될 때마다 새롭게만들어 메일로 보냄
         for (int i = 0; i < 8; i++) { // 인증코드 8자리
             int index = rnd.nextInt(3); // 0~2 까지 랜덤
 
@@ -56,12 +58,11 @@ public class EmailService {
         }
         randomCode = key.toString();
 
-        // TODO Auto-generated method stub
+        // 메세지 내용 작성
         MimeMessage message = emailSender.createMimeMessage();
 
-        message.addRecipients(MimeMessage.RecipientType.TO, email);//보내는 대상
-        message.setSubject("hanghaebnb 회원가입 이메일 인증");//제목
-
+        message.addRecipients(MimeMessage.RecipientType.TO, email);
+        message.setSubject("hanghaebnb 회원가입 이메일 인증");
         String msgg="";
         msgg+= "<div style='margin:100px;'>";
         msgg+= "<h1> 안녕하세요 hanghaebnb입니다. </h1>";
@@ -79,9 +80,7 @@ public class EmailService {
         message.setText(msgg, "utf-8", "html");//내용
         message.setFrom(new InternetAddress("hanghaebnb@gmail.com","test"));//보내는 사람
 
-        System.out.println("보내는 대상 : "+ email);
-        System.out.println("인증 번호 : "+ randomCode);
-
+        // 메세지 발송
         try{
             emailSender.send(message);
         }catch(MailException es){
@@ -89,30 +88,36 @@ public class EmailService {
             throw new IllegalArgumentException();
         }
 
+        // 만들었던 랜덤코드 DB에 저장하기
         Code code = new Code(randomCode,email);
         codeRepository.save(code);
         return randomCode;
     }
 
+    // 회원가입
     public void emailSignup(SignupRequestDto dto) {
         String email = dto.getEmail();
         String password = passwordEncoder.encode(dto.getPassword());
         String nickname = dto.getNickname();
 
+        // DB에 이메일과 닉네임 중복 있는지 체크
         if(userRepository.findByEmail(email).isPresent()) {
             throw new CustomException(EXIST_USER);
         }
-
         if(userRepository.findByNickname(nickname).isPresent()) {
             throw new CustomException(EXIST_NICK);
         }
 
+        // DB에 회원가입할 데이터 저장
         User user = new User(email, password, nickname);
         userRepository.save(user);
     }
 
+    // 이메일로 받은 랜덤코드 대조
     public boolean verifyCode(String issuedCode, String email) {
 
+        // 리파지토리에서 해당 이메일로 저장된 모든 랜덤코드 불러오기
+        // 리파지토리에서 불러온 랜덤코드 중 가장 최신순으로 발행된 코드 찾기
         List<Code> codeList = codeRepository.findByEmail(email);
         long id = 0L;
         for (Code code : codeList) {
@@ -120,11 +125,12 @@ public class EmailService {
                 id=code.getId();
             }
         }
+
+        // 해당 email로 보낸 가장 최신 랜덤코드 불러오기
         Code code = codeRepository.findByEmailAndId(email, id);
 
+        // 해당 email로 보낸 가장 최신 랜덤코드와 입력한 코드 대조작업
         Boolean result = false;
-
-        System.out.println(code.getRandomCode());
         if(code.getRandomCode().equals(issuedCode)) {
 
             result =true;
