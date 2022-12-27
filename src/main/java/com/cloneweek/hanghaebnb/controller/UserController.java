@@ -2,6 +2,7 @@ package com.cloneweek.hanghaebnb.controller;
 
 import com.cloneweek.hanghaebnb.common.jwt.JwtUtil;
 import com.cloneweek.hanghaebnb.common.exception.StatusMsgCode;
+import com.cloneweek.hanghaebnb.dto.DupliCheckDto;
 import com.cloneweek.hanghaebnb.dto.LoginRequestDto;
 import com.cloneweek.hanghaebnb.dto.ResponseMsgDto;
 import com.cloneweek.hanghaebnb.dto.SignupRequestDto;
@@ -43,13 +44,13 @@ public class UserController {
 
     // 이메일 중복 확인
     @PostMapping("/email-check")
-    public ResponseEntity<ResponseMsgDto> emailCheck(@RequestBody @Valid SignupRequestDto dto) {
+    public ResponseEntity<ResponseMsgDto> emailCheck(@RequestBody @Valid DupliCheckDto dto) {
         return ResponseEntity.ok(userService.emailCheck(dto));
     }
 
     // 닉네임 중복 확인
     @PostMapping("/nick-check")
-    public ResponseEntity<ResponseMsgDto> nickCheck(@RequestBody SignupRequestDto dto) {
+    public ResponseEntity<ResponseMsgDto> nickCheck(@RequestBody DupliCheckDto dto) {
         return ResponseEntity.ok(userService.nickCheck(dto));
     }
 
