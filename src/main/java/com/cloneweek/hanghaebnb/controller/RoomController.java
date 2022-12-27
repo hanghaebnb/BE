@@ -49,7 +49,7 @@ public class RoomController {
     //숙수 정보 수정
     @CrossOrigin
     @PatchMapping("/rooms/{roomId}")
-    public ResponseEntity<RoomResponseDto> updateRoom(@PathVariable Long roomId,
+    public ResponseEntity<ResponseMsgDto> updateRoom(@PathVariable Long roomId,
                                                       @RequestPart(value = "data") RoomRequestDto requestDto,
                                                       @RequestPart(value = "file")  List<MultipartFile> multipartFilelist,
                                                       @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {

@@ -116,7 +116,7 @@ public class RoomService {
 //        return new RoomResponseDto(room, user.getNickname());
 //    }
     @Transactional
-    public RoomResponseDto update(Long roomId, RoomRequestDto requestDto, User user, List<MultipartFile> multipartFilelist) {
+    public ResponseMsgDto update(Long roomId, RoomRequestDto requestDto, User user, List<MultipartFile> multipartFilelist) {
         Room room = roomRepository.findById(roomId).orElseThrow(                // 글 존재 여부 확인
                 () -> new CustomException(StatusMsgCode.ROOM_NOT_FOUND)
         );
@@ -142,7 +142,7 @@ public class RoomService {
             throw new CustomException(StatusMsgCode.FILE_UPLOAD_FAILED);
         }
 
-        return new RoomResponseDto(room, user.getNickname());
+        return new ResponseMsgDto(StatusMsgCode.UPDATE);
     }
 
     //숙소 정보 삭제
