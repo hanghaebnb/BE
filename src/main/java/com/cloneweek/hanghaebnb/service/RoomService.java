@@ -53,9 +53,9 @@ public class RoomService {
 
         // 페이징 처리
         // 작성날짜 순으로 정렬
-        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
-
-        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+//        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+//
+//        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
 //        Page<Room> rooms = roomRepository.findAll(pageable);
 
         Page<Room> roomList = roomRepository.findAll(pageable);
@@ -73,9 +73,9 @@ public class RoomService {
     public List<RoomResponseDto> search(String keyword, Pageable pageable, User user) {
         // 페이징 처리
         // 작성날짜 순으로 정렬
-        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
-
-        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+//        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+//
+//        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
 
         Page<Room> roomList = roomRepository.findByTitleContaining(keyword, pageable);
         List<RoomResponseDto> roomResponseDtos = new ArrayList<>();
