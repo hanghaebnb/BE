@@ -1,6 +1,5 @@
-package com.cloneweek.hanghaebnb.mail;
+package com.cloneweek.hanghaebnb.email;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,12 +9,9 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Properties;
 
-
-@RequiredArgsConstructor
 @Configuration
-//@PropertySource("classpath:email.properties")
+@PropertySource("classpath:email.properties")
 public class EmailConfig {
-
 
     @Value("${mail.smtp.port}")
     private int port;
