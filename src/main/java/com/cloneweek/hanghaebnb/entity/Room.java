@@ -41,6 +41,9 @@ public class Room extends Timestamped {
     @OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
     private List<RoomLike> likeList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
+    private List<ImageFile> imageFileList = new ArrayList<>();
+
     public Room(RoomRequestDto requestDto, User user){
         this.title = requestDto.getTitle();
         this.description = requestDto.getDescription();

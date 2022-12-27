@@ -4,6 +4,7 @@ import com.cloneweek.hanghaebnb.common.security.UserDetailsImpl;
 import com.cloneweek.hanghaebnb.dto.ResponseMsgDto;
 import com.cloneweek.hanghaebnb.dto.RoomRequestDto;
 import com.cloneweek.hanghaebnb.dto.RoomResponseDto;
+import com.cloneweek.hanghaebnb.dto.UnClientResponseDto;
 import com.cloneweek.hanghaebnb.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -38,6 +39,12 @@ public class RoomController {
         return ResponseEntity.ok(roomService.getRooms(pageable, userDetails.getUser()));
     }
 
+    // 비회원 숙소 전체 조회
+    @GetMapping("/rooms/main")
+    public ResponseEntity<List<UnClientResponseDto>> getnoclientRooms(Pageable pageable) {
+        return ResponseEntity.ok(roomService.getnoclientRooms(pageable));
+    }
+
     //숙소 키워드 조회
     @GetMapping("/rooms/search") // '/api/rooms/search?keyword=제목&page=0&size=2'
     public ResponseEntity<List<RoomResponseDto>> search(@AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -49,7 +56,7 @@ public class RoomController {
     //숙수 정보 수정
     @CrossOrigin
     @PatchMapping("/rooms/{roomId}")
-    public ResponseEntity<RoomResponseDto> updateRoom(@PathVariable Long roomId,
+    public ResponseEntity<ResponseMsgDto> updateRoom(@PathVariable Long roomId,
                                                       @RequestPart(value = "data") RoomRequestDto requestDto,
                                                       @RequestPart(value = "file")  List<MultipartFile> multipartFilelist,
                                                       @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
