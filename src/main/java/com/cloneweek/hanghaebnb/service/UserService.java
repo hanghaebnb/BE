@@ -2,10 +2,7 @@ package com.cloneweek.hanghaebnb.service;
 
 import com.cloneweek.hanghaebnb.common.exception.CustomException;
 import com.cloneweek.hanghaebnb.common.jwt.JwtUtil;
-import com.cloneweek.hanghaebnb.dto.LoginRequestDto;
-import com.cloneweek.hanghaebnb.dto.ResponseBoolDto;
-import com.cloneweek.hanghaebnb.dto.ResponseMsgDto;
-import com.cloneweek.hanghaebnb.dto.SignupRequestDto;
+import com.cloneweek.hanghaebnb.dto.*;
 import com.cloneweek.hanghaebnb.entity.User;
 import com.cloneweek.hanghaebnb.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -57,13 +54,17 @@ public class UserService {
     }
 
     // 이메일 중복 확인
-    public ResponseMsgDto emailCheck(SignupRequestDto dto) {
+//    public ResponseMsgDto emailCheck(SignupRequestDto dto) { //원래코드 12.26 21:54 주석처리
+//        Boolean flag = userRepository.existsByEmail(dto.getEmail());
+//        return new ResponseBoolDto(flag ? EXIST_USER : EMAIL, flag);
+//    }
+    public ResponseMsgDto emailCheck(DupliCheckDto dto) {
         Boolean flag = userRepository.existsByEmail(dto.getEmail());
         return new ResponseBoolDto(flag ? EXIST_USER : EMAIL, flag);
     }
 
     // 닉네임 중복 확인
-    public ResponseMsgDto nickCheck(SignupRequestDto dto) {
+    public ResponseMsgDto nickCheck(DupliCheckDto dto) {
         Boolean flag = userRepository.existsByNickname(dto.getNickname());
         return new ResponseBoolDto(flag ? EXIST_NICK : NICKNAME, flag);
     }
