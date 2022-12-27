@@ -3,6 +3,7 @@ package com.cloneweek.hanghaebnb.service;
 import com.cloneweek.hanghaebnb.common.exception.CustomException;
 import com.cloneweek.hanghaebnb.common.exception.StatusMsgCode;
 import com.cloneweek.hanghaebnb.common.s3.AmazonS3Service;
+import com.cloneweek.hanghaebnb.dto.ImageFileResponseDto;
 import com.cloneweek.hanghaebnb.dto.ResponseMsgDto;
 import com.cloneweek.hanghaebnb.dto.RoomRequestDto;
 import com.cloneweek.hanghaebnb.dto.RoomResponseDto;
@@ -61,9 +62,14 @@ public class RoomService {
         Page<Room> roomList = roomRepository.findAll(pageable);
         List<RoomResponseDto> roomResponseDto = new ArrayList<>();
         for (Room room : roomList) {
+            List<ImageFileResponseDto> imageFileResponseDtoList = new ArrayList<>();
+            for (ImageFile imageFile : room.getImageFileList()) {
+                imageFileResponseDtoList.add(new ImageFileResponseDto(imageFile));
+            }
           roomResponseDto.add(new RoomResponseDto(
                   room,
-                  (checkLike(room.getId(), user))));
+                  (checkLike(room.getId(), user)),
+                  imageFileResponseDtoList));
         }
         return roomResponseDto;
     }
@@ -80,7 +86,11 @@ public class RoomService {
         Page<Room> roomList = roomRepository.findByTitleContaining(keyword, pageable);
         List<RoomResponseDto> roomResponseDtos = new ArrayList<>();
         for(Room room : roomList){
-            roomResponseDtos.add(new RoomResponseDto(room, (checkLike(room.getId(), user))));
+            List<ImageFileResponseDto> imageFileResponseDtoList = new ArrayList<>();
+            for (ImageFile imageFile : room.getImageFileList()) {
+                imageFileResponseDtoList.add(new ImageFileResponseDto(imageFile));
+            }
+            roomResponseDtos.add(new RoomResponseDto(room, (checkLike(room.getId(), user)), imageFileResponseDtoList));
         }
 
         return roomResponseDtos;

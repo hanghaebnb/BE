@@ -3,6 +3,7 @@ package com.cloneweek.hanghaebnb.dto;
 import com.cloneweek.hanghaebnb.entity.Room;
 import lombok.Getter;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 public class RoomResponseDto {
@@ -13,6 +14,7 @@ public class RoomResponseDto {
     private String address;
     private String type;
     private int price;
+    private List<ImageFileResponseDto> imageList;
 
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
@@ -34,7 +36,7 @@ public class RoomResponseDto {
 
     }
 
-    public RoomResponseDto(Room room, boolean likeCheck){
+    public RoomResponseDto(Room room, boolean likeCheck, List<ImageFileResponseDto> imageFileResponseDtoList){
         this.nickname = room.getUser().getNickname();
         this.id = room.getId();
         this.title = room.getTitle();
@@ -42,6 +44,7 @@ public class RoomResponseDto {
         this.description = room.getDescription();
         this.address = room.getAddress();
         this.price = room.getPrice();
+        this.imageList = imageFileResponseDtoList;
         this.createdAt = room.getCreatedAt();
         this.modifiedAt = room.getModifiedAt();
         this.likeCheck = likeCheck;
