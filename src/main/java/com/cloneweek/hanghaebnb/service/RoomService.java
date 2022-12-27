@@ -83,13 +83,15 @@ public class RoomService {
 
         List<UnClientResponseDto> unClientResponseDto = new ArrayList<>();
         for (Room room : roomList) {
-            List<ImageFileResponseDto> imageFileResponseDtoList = new ArrayList<>();
+//            List<ImageFileResponseDto> imageFileResponseDtoList = new ArrayList<>();
+//            for (ImageFile imageFile : room.getImageFileList()) {
+//                imageFileResponseDtoList.add(new ImageFileResponseDto(imageFile));
+//            }
+            List<String> imageFileList = new ArrayList<>(); // 12.27 14:34 변경사항
             for (ImageFile imageFile : room.getImageFileList()) {
-                imageFileResponseDtoList.add(new ImageFileResponseDto(imageFile));
+                imageFileList.add(imageFile.getPath());
             }
-            unClientResponseDto.add(new UnClientResponseDto(
-                    room,
-                    imageFileResponseDtoList));
+            unClientResponseDto.add(new UnClientResponseDto(room,imageFileList));
         }
         return unClientResponseDto;
     }
