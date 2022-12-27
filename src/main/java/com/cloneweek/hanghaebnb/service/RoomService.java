@@ -3,10 +3,7 @@ package com.cloneweek.hanghaebnb.service;
 import com.cloneweek.hanghaebnb.common.exception.CustomException;
 import com.cloneweek.hanghaebnb.common.exception.StatusMsgCode;
 import com.cloneweek.hanghaebnb.common.s3.AmazonS3Service;
-import com.cloneweek.hanghaebnb.dto.ImageFileResponseDto;
-import com.cloneweek.hanghaebnb.dto.ResponseMsgDto;
-import com.cloneweek.hanghaebnb.dto.RoomRequestDto;
-import com.cloneweek.hanghaebnb.dto.RoomResponseDto;
+import com.cloneweek.hanghaebnb.dto.*;
 import com.cloneweek.hanghaebnb.entity.ImageFile;
 import com.cloneweek.hanghaebnb.entity.Room;
 import com.cloneweek.hanghaebnb.entity.RoomLike;
@@ -19,7 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,7 +45,7 @@ public class RoomService {
     }
 
     //숙소 정보 전체 조회
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true) //회원 전체 조회
     public List<RoomResponseDto> getRooms(Pageable pageable, User user) {
 
         // 페이징 처리
@@ -72,6 +68,30 @@ public class RoomService {
                   imageFileList));
         }
         return roomResponseDto;
+    }
+
+    @Transactional(readOnly = true) //비회원 전체 조회
+    public List<UnClientResponseDto> getnoclientRooms(Pageable pageable) {
+
+        // 페이징 처리
+        // 작성날짜 순으로 정렬
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+
+        Page<Room> roomList = roomRepository.findAll(pageable);
+
+        List<UnClientResponseDto> unClientResponseDto = new ArrayList<>();
+        for (Room room : roomList) {
+            List<ImageFileResponseDto> imageFileResponseDtoList = new ArrayList<>();
+            for (ImageFile imageFile : room.getImageFileList()) {
+                imageFileResponseDtoList.add(new ImageFileResponseDto(imageFile));
+            }
+            unClientResponseDto.add(new UnClientResponseDto(
+                    room,
+                    imageFileResponseDtoList));
+        }
+        return unClientResponseDto;
     }
 
     //숙소 키워드 검색

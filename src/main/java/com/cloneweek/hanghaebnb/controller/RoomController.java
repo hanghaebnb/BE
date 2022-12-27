@@ -4,6 +4,7 @@ import com.cloneweek.hanghaebnb.common.security.UserDetailsImpl;
 import com.cloneweek.hanghaebnb.dto.ResponseMsgDto;
 import com.cloneweek.hanghaebnb.dto.RoomRequestDto;
 import com.cloneweek.hanghaebnb.dto.RoomResponseDto;
+import com.cloneweek.hanghaebnb.dto.UnClientResponseDto;
 import com.cloneweek.hanghaebnb.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +37,12 @@ public class RoomController {
     public ResponseEntity<List<RoomResponseDto>> getRooms(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                           Pageable pageable) {
         return ResponseEntity.ok(roomService.getRooms(pageable, userDetails.getUser()));
+    }
+
+    // 비회원 숙소 전체 조회
+    @GetMapping("/rooms/main")
+    public ResponseEntity<List<UnClientResponseDto>> getnoclientRooms(Pageable pageable) {
+        return ResponseEntity.ok(roomService.getnoclientRooms(pageable));
     }
 
     //숙소 키워드 조회
