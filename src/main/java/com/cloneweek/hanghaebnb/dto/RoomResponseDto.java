@@ -14,7 +14,7 @@ public class RoomResponseDto {
     private String address;
     private String type;
     private int price;
-    private List<ImageFileResponseDto> imageList;
+    private List<String> imageList;
 
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
@@ -36,7 +36,7 @@ public class RoomResponseDto {
 
     }
 
-    public RoomResponseDto(Room room, boolean likeCheck, List<ImageFileResponseDto> imageFileResponseDtoList){
+    public RoomResponseDto(Room room, boolean likeCheck, List<String> imageFileList){
         this.nickname = room.getUser().getNickname();
         this.id = room.getId();
         this.title = room.getTitle();
@@ -44,7 +44,7 @@ public class RoomResponseDto {
         this.description = room.getDescription();
         this.address = room.getAddress();
         this.price = room.getPrice();
-        this.imageList = imageFileResponseDtoList;
+        this.imageList = imageFileList;
         this.createdAt = room.getCreatedAt();
         this.modifiedAt = room.getModifiedAt();
         this.likeCheck = likeCheck;

@@ -62,14 +62,14 @@ public class RoomService {
         Page<Room> roomList = roomRepository.findAll(pageable);
         List<RoomResponseDto> roomResponseDto = new ArrayList<>();
         for (Room room : roomList) {
-            List<ImageFileResponseDto> imageFileResponseDtoList = new ArrayList<>();
+            List<String> imageFileList = new ArrayList<>();
             for (ImageFile imageFile : room.getImageFileList()) {
-                imageFileResponseDtoList.add(new ImageFileResponseDto(imageFile));
+                imageFileList.add(imageFile.getPath());
             }
           roomResponseDto.add(new RoomResponseDto(
                   room,
                   (checkLike(room.getId(), user)),
-                  imageFileResponseDtoList));
+                  imageFileList));
         }
         return roomResponseDto;
     }
@@ -86,11 +86,11 @@ public class RoomService {
         Page<Room> roomList = roomRepository.findByTitleContaining(keyword, pageable);
         List<RoomResponseDto> roomResponseDtos = new ArrayList<>();
         for(Room room : roomList){
-            List<ImageFileResponseDto> imageFileResponseDtoList = new ArrayList<>();
+            List<String> imageFileList = new ArrayList<>();
             for (ImageFile imageFile : room.getImageFileList()) {
-                imageFileResponseDtoList.add(new ImageFileResponseDto(imageFile));
+                imageFileList.add(imageFile.getPath());
             }
-            roomResponseDtos.add(new RoomResponseDto(room, (checkLike(room.getId(), user)), imageFileResponseDtoList));
+            roomResponseDtos.add(new RoomResponseDto(room, (checkLike(room.getId(), user)), imageFileList));
         }
 
         return roomResponseDtos;
