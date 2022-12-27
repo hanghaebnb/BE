@@ -40,7 +40,7 @@ public class WebSecurityConfig {
         http.httpBasic().disable()
                 .authorizeRequests()
                 .antMatchers("/api/users/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/rooms/main").permitAll()
 
                 .anyRequest().authenticated()
                 .and()
