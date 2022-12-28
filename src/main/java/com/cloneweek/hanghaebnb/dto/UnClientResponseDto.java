@@ -1,6 +1,7 @@
 package com.cloneweek.hanghaebnb.dto;
 
 import com.cloneweek.hanghaebnb.entity.Room;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,8 +20,9 @@ public class UnClientResponseDto {
     private String type;
     private int price;
     private List<String> imageList;
-
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createdAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime modifiedAt;
 
     //좋아요 부분

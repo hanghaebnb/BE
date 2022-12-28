@@ -13,6 +13,7 @@ import com.cloneweek.hanghaebnb.repository.RoomLikeRepository;
 import com.cloneweek.hanghaebnb.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -49,19 +50,19 @@ public class RoomService {
 
         // pageable은 필수, type, price(기본값 0)별 필터링
         Page<Room> roomList = roomRepository.findAll(pageable);      // RequestParam page, size만 있을 때
-        if (type != null && minPrice == 0 && maxPrice == 0){         // RequestParam type만 있을 때
+        if (type != null && minPrice == 0 && maxPrice == 0) {         // RequestParam type만 있을 때
             roomList = roomRepository.findByType(type, pageable);
-        } else if (type == null && minPrice != 0 && maxPrice != 0){  // RequestParam price만 있을 때
+        } else if (type == null && minPrice != 0 && maxPrice != 0) {  // RequestParam price만 있을 때
             roomList = roomRepository.findByPriceBetween(minPrice, maxPrice, pageable);
-        } else if (type != null && minPrice != 0 && maxPrice != 0){  // RequestParam type, price 둘 다 있을 때
+        } else if (type != null && minPrice != 0 && maxPrice != 0) {  // RequestParam type, price 둘 다 있을 때
             roomList = roomRepository.findByPriceBetweenAndType(minPrice, maxPrice, type, pageable);
         }
         List<RoomResponseDto> roomResponseDto = new ArrayList<>();
         for (Room room : roomList) {
-              List<String> imageFileList = new ArrayList<>();
-              for (ImageFile imageFile : room.getImageFileList()) {
-                  imageFileList.add(imageFile.getPath());
-              }
+            List<String> imageFileList = new ArrayList<>();
+            for (ImageFile imageFile : room.getImageFileList()) {
+                imageFileList.add(imageFile.getPath());
+            }
             roomResponseDto.add(new RoomResponseDto(
                     room,
                     (checkLike(room.getId(), user)),
@@ -72,13 +73,6 @@ public class RoomService {
 
     @Transactional(readOnly = true) //비회원 전체 조회
     public List<UnClientResponseDto> getnoclientRooms(Pageable pageable) {
-
-        // 페이징 처리
-        // 작성날짜 순으로 정렬
-        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
-
-        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
-
         Page<Room> roomList = roomRepository.findAll(pageable);
 
         List<UnClientResponseDto> unClientResponseDto = new ArrayList<>();
@@ -91,7 +85,7 @@ public class RoomService {
             for (ImageFile imageFile : room.getImageFileList()) {
                 imageFileList.add(imageFile.getPath());
             }
-            unClientResponseDto.add(new UnClientResponseDto(room,imageFileList));
+            unClientResponseDto.add(new UnClientResponseDto(room, imageFileList));
         }
         return unClientResponseDto;
     }
@@ -99,15 +93,9 @@ public class RoomService {
     //숙소 키워드 검색
     @Transactional(readOnly = true)
     public List<RoomResponseDto> search(String keyword, Pageable pageable, User user) {
-        // 페이징 처리
-        // 작성날짜 순으로 정렬
-//        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
-//
-//        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
-
         Page<Room> roomList = roomRepository.findByTitleContaining(keyword, pageable);
         List<RoomResponseDto> roomResponseDtos = new ArrayList<>();
-        for(Room room : roomList){
+        for (Room room : roomList) {
             List<String> imageFileList = new ArrayList<>();
             for (ImageFile imageFile : room.getImageFileList()) {
                 imageFileList.add(imageFile.getPath());
@@ -203,7 +191,7 @@ public class RoomService {
 //        return new ResponseMsgDto(StatusMsgCode.DELETE_POST);
 //    }
     @Transactional
-    public ResponseMsgDto delete(Long roomId, User user){
+    public ResponseMsgDto delete(Long roomId, User user) {
         Room room = roomRepository.findById(roomId).orElseThrow(
                 () -> new CustomException(StatusMsgCode.ROOM_NOT_FOUND)
         );

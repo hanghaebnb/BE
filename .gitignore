@@ -8,6 +8,7 @@ build/
 ### application ###
 application-jwt.properties
 application-rds.properties
+application-email.properties
 
 ### STS ###
 .apt_generated
