@@ -51,10 +51,9 @@ public class RoomController {
 
     //숙소 키워드 조회
     @GetMapping("/rooms/search") // '/api/rooms/search?keyword=제목&page=0&size=2'
-    public ResponseEntity<List<RoomResponseDto>> search(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                        @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
-                                                        String keyword){
-        return ResponseEntity.ok(roomService.search(keyword, pageable, userDetails.getUser()));
+    public ResponseEntity<List<UnClientResponseDto>> search(@PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+                                                            String keyword){
+        return ResponseEntity.ok(roomService.search(keyword, pageable));
     }
 
     //숙소 정보 수정
@@ -80,7 +79,7 @@ public class RoomController {
         return ResponseEntity.ok().body(roomService.saveLike(roomId, userDetails.getUser()));
     }
 
-    // 게시글 좋아요 취소
+    // 숙소 좋아요 취소
     @DeleteMapping("/rooms/{roomId}/like")
     public ResponseEntity<ResponseMsgDto> cancelLike(@PathVariable Long roomId,
                                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
