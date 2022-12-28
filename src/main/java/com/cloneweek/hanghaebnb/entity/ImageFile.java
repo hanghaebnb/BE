@@ -20,7 +20,7 @@ public class ImageFile {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;                  // userid
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id", nullable = false)
     private Room room;
 
