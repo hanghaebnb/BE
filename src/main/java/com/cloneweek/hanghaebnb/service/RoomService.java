@@ -57,6 +57,7 @@ public class RoomService {
         } else if (type != null && minPrice != 0 && maxPrice != 0) {  // RequestParam type, price 둘 다 있을 때
             roomList = roomRepository.findByPriceBetweenAndType(minPrice, maxPrice, type, pageable);
         }
+
         List<RoomResponseDto> roomResponseDto = new ArrayList<>();
         for (Room room : roomList) {
             List<String> imageFileList = new ArrayList<>();
@@ -72,8 +73,17 @@ public class RoomService {
     }
 
     @Transactional(readOnly = true) //비회원 전체 조회
-    public List<UnClientResponseDto> getnoclientRooms(Pageable pageable) {
-        Page<Room> roomList = roomRepository.findAll(pageable);
+    public List<UnClientResponseDto> getnoclientRooms(Pageable pageable, int minPrice, int maxPrice, String type) {
+
+        // pageable은 필수, type, price(기본값 0)별 필터링
+        Page<Room> roomList = roomRepository.findAll(pageable);      // RequestParam page, size만 있을 때
+        if (type != null && minPrice == 0 && maxPrice == 0) {         // RequestParam type만 있을 때
+            roomList = roomRepository.findByType(type, pageable);
+        } else if (type == null && minPrice != 0 && maxPrice != 0) {  // RequestParam price만 있을 때
+            roomList = roomRepository.findByPriceBetween(minPrice, maxPrice, pageable);
+        } else if (type != null && minPrice != 0 && maxPrice != 0) {  // RequestParam type, price 둘 다 있을 때
+            roomList = roomRepository.findByPriceBetweenAndType(minPrice, maxPrice, type, pageable);
+        }
 
         List<UnClientResponseDto> unClientResponseDto = new ArrayList<>();
         for (Room room : roomList) {

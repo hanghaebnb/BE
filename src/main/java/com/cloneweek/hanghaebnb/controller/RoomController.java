@@ -45,8 +45,11 @@ public class RoomController {
 
     // 비회원 숙소 전체 조회
     @GetMapping("/rooms/main")
-    public ResponseEntity<List<UnClientResponseDto>> getnoclientRooms(@PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok(roomService.getnoclientRooms(pageable));
+    public ResponseEntity<List<UnClientResponseDto>> getnoclientRooms(@PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+                                                                      @RequestParam(required = false, defaultValue = "0") int minPrice,
+                                                                      @RequestParam(required = false, defaultValue = "0") int maxPrice,
+                                                                      @RequestParam(required = false) String type) {
+        return ResponseEntity.ok(roomService.getnoclientRooms(pageable, minPrice, maxPrice, type));
     }
 
     //숙소 키워드 조회
