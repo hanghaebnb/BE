@@ -123,6 +123,18 @@ public class RoomService {
         return roomResponseDtos;
     }
 
+    //숙소 상세 조회
+    public UnClientResponseDto getRoom(Long roomId) {
+        Room room = roomRepository.findById(roomId).orElseThrow(
+                () -> new CustomException(StatusMsgCode.ROOM_NOT_FOUND)
+        );
+        List<String> imageFileList = new ArrayList<>();
+        for (ImageFile imageFile : room.getImageFileList()) {
+            imageFileList.add(imageFile.getPath());
+        }
+        return new UnClientResponseDto(room, imageFileList);
+    }
+
     //숙소 정보 수정
     @Transactional
     public ResponseMsgDto update(Long roomId, RoomRequestDto requestDto, User user, List<MultipartFile> multipartFilelist) {
@@ -216,4 +228,5 @@ public class RoomService {
         roomLikeRepository.deleteByRoomIdAndUserId(roomId, user.getId());
         return new ResponseLikeDto(StatusMsgCode.CANCEL_LIKE, roomId, checkLike(roomId, user));
     }
+
 }
