@@ -247,7 +247,7 @@ public class RoomService {
             throw new CustomException(StatusMsgCode.ALREADY_CLICKED_LIKE);
         }
         roomLikeRepository.saveAndFlush(new RoomLike(room, user));
-        return new ResponseMsgDto(StatusMsgCode.LIKE);
+        return new ResponseLikeDto(StatusMsgCode.LIKE, roomId, checkLike(roomId, user));
     }
 
     //좋아요 삭제
@@ -260,6 +260,6 @@ public class RoomService {
             throw new CustomException(StatusMsgCode.ALREADY_CANCEL_LIKE);
         }
         roomLikeRepository.deleteByRoomIdAndUserId(roomId, user.getId());
-        return new ResponseMsgDto(StatusMsgCode.CANCEL_LIKE);
+        return new ResponseLikeDto(StatusMsgCode.CANCEL_LIKE, roomId, checkLike(roomId, user));
     }
 }
