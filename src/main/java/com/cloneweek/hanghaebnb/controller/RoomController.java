@@ -59,8 +59,14 @@ public class RoomController {
         return ResponseEntity.ok(roomService.search(keyword, pageable));
     }
 
+    //숙소 상세 조회
+    @GetMapping("/rooms/{roomId}")
+    public ResponseEntity<UnClientResponseDto> getRoom(@PathVariable Long roomId) {
+        return ResponseEntity.ok(roomService.getRoom(roomId));
+    }
+
     //숙소 정보 수정
-    @CrossOrigin
+    @CrossOrigin // CORS 해결책 중 하나
     @PatchMapping("/rooms/{roomId}")
     public ResponseEntity<ResponseMsgDto> updateRoom(@PathVariable Long roomId,
                                                       @RequestPart(value = "data") RoomRequestDto requestDto,
