@@ -42,5 +42,4 @@ public class User {
         this.kakaoId = kakaoId;
         return this;
     }
-
 }

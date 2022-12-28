@@ -1,11 +1,11 @@
 package com.cloneweek.hanghaebnb.controller;
 
-import com.cloneweek.hanghaebnb.common.jwt.JwtUtil;
-import com.cloneweek.hanghaebnb.common.exception.StatusMsgCode;
-import com.cloneweek.hanghaebnb.dto.DupliCheckDto;
-import com.cloneweek.hanghaebnb.dto.LoginRequestDto;
-import com.cloneweek.hanghaebnb.dto.ResponseMsgDto;
-import com.cloneweek.hanghaebnb.dto.SignupRequestDto;
+import com.cloneweek.hanghaebnb.util.jwt.JwtUtil;
+import com.cloneweek.hanghaebnb.util.exception.StatusMsgCode;
+import com.cloneweek.hanghaebnb.dto.RequestDto.DupliCheckDto;
+import com.cloneweek.hanghaebnb.dto.RequestDto.LoginRequestDto;
+import com.cloneweek.hanghaebnb.dto.ResponseDto.ResponseMsgDto;
+import com.cloneweek.hanghaebnb.dto.RequestDto.SignupRequestDto;
 import com.cloneweek.hanghaebnb.service.KakaoService;
 import com.cloneweek.hanghaebnb.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;

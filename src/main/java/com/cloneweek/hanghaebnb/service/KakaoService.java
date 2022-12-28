@@ -1,7 +1,7 @@
 package com.cloneweek.hanghaebnb.service;
 
-import com.cloneweek.hanghaebnb.common.jwt.JwtUtil;
-import com.cloneweek.hanghaebnb.dto.KakaoUserInfoDto;
+import com.cloneweek.hanghaebnb.util.jwt.JwtUtil;
+import com.cloneweek.hanghaebnb.dto.RequestDto.KakaoUserInfoDto;
 import com.cloneweek.hanghaebnb.entity.User;
 import com.cloneweek.hanghaebnb.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;

@@ -1,10 +1,10 @@
 package com.cloneweek.hanghaebnb.controller;
 
-import com.cloneweek.hanghaebnb.common.security.UserDetailsImpl;
-import com.cloneweek.hanghaebnb.dto.ResponseMsgDto;
-import com.cloneweek.hanghaebnb.dto.RoomRequestDto;
-import com.cloneweek.hanghaebnb.dto.RoomResponseDto;
-import com.cloneweek.hanghaebnb.dto.UnClientResponseDto;
+import com.cloneweek.hanghaebnb.util.security.UserDetailsImpl;
+import com.cloneweek.hanghaebnb.dto.ResponseDto.ResponseMsgDto;
+import com.cloneweek.hanghaebnb.dto.RequestDto.RoomRequestDto;
+import com.cloneweek.hanghaebnb.dto.ResponseDto.RoomResponseDto;
+import com.cloneweek.hanghaebnb.dto.ResponseDto.UnClientResponseDto;
 import com.cloneweek.hanghaebnb.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
