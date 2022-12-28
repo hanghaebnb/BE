@@ -45,7 +45,7 @@ public class RoomController {
 
     // 비회원 숙소 전체 조회
     @GetMapping("/rooms/main")
-    public ResponseEntity<List<UnClientResponseDto>> getnoclientRooms(Pageable pageable) {
+    public ResponseEntity<List<UnClientResponseDto>> getnoclientRooms(@PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok(roomService.getnoclientRooms(pageable));
     }
 
