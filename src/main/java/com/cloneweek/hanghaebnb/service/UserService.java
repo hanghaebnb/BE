@@ -1,15 +1,19 @@
 package com.cloneweek.hanghaebnb.service;
 
-import com.cloneweek.hanghaebnb.common.exception.CustomException;
-import com.cloneweek.hanghaebnb.common.jwt.JwtUtil;
-import com.cloneweek.hanghaebnb.dto.*;
+import com.cloneweek.hanghaebnb.util.exception.CustomException;
+import com.cloneweek.hanghaebnb.util.jwt.JwtUtil;
+import com.cloneweek.hanghaebnb.dto.RequestDto.DupliCheckDto;
+import com.cloneweek.hanghaebnb.dto.RequestDto.LoginRequestDto;
+import com.cloneweek.hanghaebnb.dto.RequestDto.SignupRequestDto;
+import com.cloneweek.hanghaebnb.dto.ResponseDto.ResponseBoolDto;
+import com.cloneweek.hanghaebnb.dto.ResponseDto.ResponseMsgDto;
 import com.cloneweek.hanghaebnb.entity.User;
 import com.cloneweek.hanghaebnb.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletResponse;
-import static com.cloneweek.hanghaebnb.common.exception.StatusMsgCode.*;
+import static com.cloneweek.hanghaebnb.util.exception.StatusMsgCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -54,10 +58,6 @@ public class UserService {
     }
 
     // 이메일 중복 확인
-//    public ResponseMsgDto emailCheck(SignupRequestDto dto) { //원래코드 12.26 21:54 주석처리
-//        Boolean flag = userRepository.existsByEmail(dto.getEmail());
-//        return new ResponseBoolDto(flag ? EXIST_USER : EMAIL, flag);
-//    }
     public ResponseMsgDto emailCheck(DupliCheckDto dto) {
         Boolean flag = userRepository.existsByEmail(dto.getEmail());
         return new ResponseBoolDto(flag ? EXIST_USER : EMAIL, flag);

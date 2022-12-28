@@ -1,9 +1,13 @@
 package com.cloneweek.hanghaebnb.service;
 
-import com.cloneweek.hanghaebnb.common.exception.CustomException;
-import com.cloneweek.hanghaebnb.common.exception.StatusMsgCode;
-import com.cloneweek.hanghaebnb.common.s3.AmazonS3Service;
-import com.cloneweek.hanghaebnb.dto.*;
+import com.cloneweek.hanghaebnb.util.exception.CustomException;
+import com.cloneweek.hanghaebnb.util.exception.StatusMsgCode;
+import com.cloneweek.hanghaebnb.util.s3.AmazonS3Service;
+import com.cloneweek.hanghaebnb.dto.RequestDto.RoomRequestDto;
+import com.cloneweek.hanghaebnb.dto.ResponseDto.ResponseLikeDto;
+import com.cloneweek.hanghaebnb.dto.ResponseDto.ResponseMsgDto;
+import com.cloneweek.hanghaebnb.dto.ResponseDto.RoomResponseDto;
+import com.cloneweek.hanghaebnb.dto.ResponseDto.UnClientResponseDto;
 import com.cloneweek.hanghaebnb.entity.ImageFile;
 import com.cloneweek.hanghaebnb.entity.Room;
 import com.cloneweek.hanghaebnb.entity.RoomLike;
@@ -13,9 +17,7 @@ import com.cloneweek.hanghaebnb.repository.RoomLikeRepository;
 import com.cloneweek.hanghaebnb.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -87,11 +89,15 @@ public class RoomService {
 
         List<UnClientResponseDto> unClientResponseDto = new ArrayList<>();
         for (Room room : roomList) {
+
+            // path를 객체로 받아올 경우 주석부분 사용,
 //            List<ImageFileResponseDto> imageFileResponseDtoList = new ArrayList<>();
 //            for (ImageFile imageFile : room.getImageFileList()) {
 //                imageFileResponseDtoList.add(new ImageFileResponseDto(imageFile));
 //            }
-            List<String> imageFileList = new ArrayList<>(); // 12.27 14:34 변경사항
+
+            // path를 String 타입으로 받올 경우
+            List<String> imageFileList = new ArrayList<>();
             for (ImageFile imageFile : room.getImageFileList()) {
                 imageFileList.add(imageFile.getPath());
             }
@@ -118,34 +124,6 @@ public class RoomService {
     }
 
     //숙소 정보 수정
-//    @Transactional
-//    public RoomResponseDto update(Long roomId, RoomRequestDto requestDto, User user, List<MultipartFile> multipartFilelist) throws IOException {
-//
-//        Room room = roomRepository.findById(roomId).orElseThrow(
-//                () -> new CustomException(StatusMsgCode.ROOM_NOT_FOUND)
-//        );
-//        if (room.getUser().getNickname().equals(user.getNickname())) {
-//            room.update(requestDto);
-//        } else {
-//            throw new CustomException(StatusMsgCode.INVALID_USER);
-//        }
-//
-//        if (multipartFilelist != null) {
-//
-//            List<ImageFile> imageFileList = imageFileRepository.findAllByRoom(room);
-//
-//            for (ImageFile File : imageFileList) {
-//                String path = File.getPath();
-//                String filename = path.substring(56);
-//                s3Service.deleteFile(filename);
-//            }
-//
-//            imageFileRepository.deleteAll(imageFileList);
-//
-//            s3Service.upload(multipartFilelist, "static", room, user);
-//        }
-//        return new RoomResponseDto(room, user.getNickname());
-//    }
     @Transactional
     public ResponseMsgDto update(Long roomId, RoomRequestDto requestDto, User user, List<MultipartFile> multipartFilelist) {
         Room room = roomRepository.findById(roomId).orElseThrow(                // 글 존재 여부 확인
@@ -177,30 +155,6 @@ public class RoomService {
     }
 
     //숙소 정보 삭제
-//    @Transactional
-//    public ResponseMsgDto delete(Long roomId, User user) {
-//        Room room = roomRepository.findById(roomId).orElseThrow(
-//                () -> new CustomException(StatusMsgCode.ROOM_NOT_FOUND)
-//        );
-//        if (room.getUser().getNickname().equals(user.getNickname())) {
-//
-//            roomLikeRepository.deleteAllByRoom(room); // 룸에 해당하는 좋아요 삭제
-//
-//            List<ImageFile> imageFileList = imageFileRepository.findAllByRoom(room);
-//            for (ImageFile imageFile : imageFileList) {
-//                String path = imageFile.getPath();
-//                String filename = path.substring(58);
-//                s3Service.deleteFile(filename);
-//            }
-//
-//            imageFileRepository.deleteAllByRoom(room); // 룸에 해당하는 이미지 파일 삭제
-//
-//            roomRepository.deleteById(roomId); // 최종적 룸 삭제
-//        } else {
-//            throw new CustomException(StatusMsgCode.INVALID_USER);
-//        }
-//        return new ResponseMsgDto(StatusMsgCode.DELETE_POST);
-//    }
     @Transactional
     public ResponseMsgDto delete(Long roomId, User user) {
         Room room = roomRepository.findById(roomId).orElseThrow(
