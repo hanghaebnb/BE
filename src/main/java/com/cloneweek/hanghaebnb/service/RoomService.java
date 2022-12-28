@@ -92,15 +92,16 @@ public class RoomService {
 
     //숙소 키워드 검색
     @Transactional(readOnly = true)
-    public List<RoomResponseDto> search(String keyword, Pageable pageable, User user) {
+    public List<UnClientResponseDto> search(String keyword, Pageable pageable) {
         Page<Room> roomList = roomRepository.findByTitleContaining(keyword, pageable);
-        List<RoomResponseDto> roomResponseDtos = new ArrayList<>();
+
+        List<UnClientResponseDto> roomResponseDtos = new ArrayList<>();
         for (Room room : roomList) {
             List<String> imageFileList = new ArrayList<>();
             for (ImageFile imageFile : room.getImageFileList()) {
                 imageFileList.add(imageFile.getPath());
             }
-            roomResponseDtos.add(new RoomResponseDto(room, (checkLike(room.getId(), user)), imageFileList));
+            roomResponseDtos.add(new UnClientResponseDto(room, imageFileList));
         }
 
         return roomResponseDtos;
