@@ -13,7 +13,6 @@ import com.cloneweek.hanghaebnb.repository.RoomLikeRepository;
 import com.cloneweek.hanghaebnb.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -46,26 +45,27 @@ public class RoomService {
 
     //숙소 정보 전체 조회
     @Transactional(readOnly = true) //회원 전체 조회
-    public List<RoomResponseDto> getRooms(Pageable pageable, User user) {
+    public List<RoomResponseDto> getRooms(User user, Pageable pageable, int minPrice, int maxPrice, String type) {
 
-        // 페이징 처리
-        // 작성날짜 순으로 정렬
-        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
-
-        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
-//        Page<Room> rooms = roomRepository.findAll(pageable);
-
-        Page<Room> roomList = roomRepository.findAll(pageable);
+        // pageable은 필수, type, price(기본값 0)별 필터링
+        Page<Room> roomList = roomRepository.findAll(pageable);      // RequestParam page, size만 있을 때
+        if (type != null && minPrice == 0 && maxPrice == 0){         // RequestParam type만 있을 때
+            roomList = roomRepository.findByType(type, pageable);
+        } else if (type == null && minPrice != 0 && maxPrice != 0){  // RequestParam price만 있을 때
+            roomList = roomRepository.findByPriceBetween(minPrice, maxPrice, pageable);
+        } else if (type != null && minPrice != 0 && maxPrice != 0){  // RequestParam type, price 둘 다 있을 때
+            roomList = roomRepository.findByPriceBetweenAndType(minPrice, maxPrice, type, pageable);
+        }
         List<RoomResponseDto> roomResponseDto = new ArrayList<>();
         for (Room room : roomList) {
-            List<String> imageFileList = new ArrayList<>();
-            for (ImageFile imageFile : room.getImageFileList()) {
-                imageFileList.add(imageFile.getPath());
-            }
-          roomResponseDto.add(new RoomResponseDto(
-                  room,
-                  (checkLike(room.getId(), user)),
-                  imageFileList));
+              List<String> imageFileList = new ArrayList<>();
+              for (ImageFile imageFile : room.getImageFileList()) {
+                  imageFileList.add(imageFile.getPath());
+              }
+            roomResponseDto.add(new RoomResponseDto(
+                    room,
+                    (checkLike(room.getId(), user)),
+                    imageFileList));
         }
         return roomResponseDto;
     }
@@ -101,9 +101,9 @@ public class RoomService {
     public List<RoomResponseDto> search(String keyword, Pageable pageable, User user) {
         // 페이징 처리
         // 작성날짜 순으로 정렬
-        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
-
-        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+//        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+//
+//        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
 
         Page<Room> roomList = roomRepository.findByTitleContaining(keyword, pageable);
         List<RoomResponseDto> roomResponseDtos = new ArrayList<>();
