@@ -1,5 +1,6 @@
 package com.cloneweek.hanghaebnb.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -31,6 +32,7 @@ public class User {
         this.nickname = nickname;
     }
 
+    @Builder
     public User(String email, String password, Long kakaoId, String kakaoNickname) {
         this.email = email;
         this.password = password;
