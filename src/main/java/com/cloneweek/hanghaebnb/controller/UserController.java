@@ -50,7 +50,7 @@ public class UserController {
 
     // 닉네임 중복 확인
     @PostMapping("/nick-check")
-    public ResponseEntity<ResponseMsgDto> nickCheck(@RequestBody DupliCheckDto dto) {
+    public ResponseEntity<ResponseMsgDto> nickCheck(@RequestBody @Valid DupliCheckDto dto) {
         return ResponseEntity.ok(userService.nickCheck(dto));
     }
 

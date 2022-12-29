@@ -54,7 +54,7 @@ public class WebSecurityConfig {
 
         CorsConfiguration config = new CorsConfiguration();
         config.addAllowedOrigin("http://localhost:3000"); // 프론트엔드 로컬서버
-//        config.addAllowedOrigin("http://charleybucket.s3-website.ap-northeast-2.amazonaws.com"); // 프론트엔드 S3서버
+        config.addAllowedOrigin("http://the-greatest-minkyu.s3-website.ap-northeast-2.amazonaws.com/"); // 프론트엔드 S3서버
         config.addExposedHeader(JwtUtil.AUTHORIZATION_HEADER);
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
