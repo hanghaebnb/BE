@@ -37,8 +37,8 @@ public class RoomController {
     @GetMapping("/rooms") // size '/api/rooms?page=0&size=3'
     public ResponseEntity<List<RoomResponseDto>> getRooms(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                           @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
-                                                          @RequestParam(required = false, defaultValue = "0") int minPrice,
-                                                          @RequestParam(required = false, defaultValue = "0") int maxPrice,
+                                                          @RequestParam(required = false, defaultValue = "-1") int minPrice,
+                                                          @RequestParam(required = false, defaultValue = "-1") int maxPrice,
                                                           @RequestParam(required = false) String type) {
         return ResponseEntity.ok(roomService.getRooms(userDetails.getUser(), pageable, minPrice, maxPrice, type));
     }
@@ -46,8 +46,8 @@ public class RoomController {
     // 비회원 숙소 전체 조회
     @GetMapping("/rooms/main")
     public ResponseEntity<List<UnClientResponseDto>> getnoclientRooms(@PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
-                                                                      @RequestParam(required = false, defaultValue = "0") int minPrice,
-                                                                      @RequestParam(required = false, defaultValue = "0") int maxPrice,
+                                                                      @RequestParam(required = false, defaultValue = "-1") int minPrice,
+                                                                      @RequestParam(required = false, defaultValue = "-1") int maxPrice,
                                                                       @RequestParam(required = false) String type) {
         return ResponseEntity.ok(roomService.getnoclientRooms(pageable, minPrice, maxPrice, type));
     }
