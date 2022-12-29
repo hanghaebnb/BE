@@ -25,6 +25,7 @@ public enum StatusMsgCode {
     ALREADY_CANCEL_LIKE(HttpStatus.CONFLICT, "이미 좋아요 취소를 눌렀습니다"),
     EXIST_USER(HttpStatus.CONFLICT, "중복된 이메일입니다."),
     EXIST_NICK(HttpStatus.CONFLICT, "중복된 닉네임입니다."),
+    UNMATCH_CODE(HttpStatus.BAD_REQUEST, "코드가 일치하지 않습니다."),
 
 
     /* 200 SUCCESS */
@@ -38,7 +39,8 @@ public enum StatusMsgCode {
     NICKNAME(HttpStatus.OK, "사용 가능한 닉네임입니다."),
     EMAIL(HttpStatus.OK, "사용 가능한 이메일입니다."),
     EMAIL_CONFIRM(HttpStatus.OK, "해당 이메일로 회원가입 가능합니다."),
-    UPDATE(HttpStatus.OK, "게시글 수정 완료");
+    UPDATE(HttpStatus.OK, "게시글 수정 완료"),
+    MATCH_CODE(HttpStatus.OK, "코드가 일치합니다.");
 
 
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */

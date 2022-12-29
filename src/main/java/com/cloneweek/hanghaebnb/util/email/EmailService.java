@@ -1,5 +1,7 @@
 package com.cloneweek.hanghaebnb.util.email;
 
+import com.cloneweek.hanghaebnb.dto.ResponseDto.ResponseBoolDto;
+import com.cloneweek.hanghaebnb.dto.ResponseDto.ResponseMsgDto;
 import com.cloneweek.hanghaebnb.util.exception.CustomException;
 import com.cloneweek.hanghaebnb.dto.RequestDto.SignupRequestDto;
 import com.cloneweek.hanghaebnb.entity.User;
@@ -15,8 +17,7 @@ import javax.mail.internet.MimeMessage;
 import java.util.List;
 import java.util.Random;
 
-import static com.cloneweek.hanghaebnb.util.exception.StatusMsgCode.EXIST_NICK;
-import static com.cloneweek.hanghaebnb.util.exception.StatusMsgCode.EXIST_USER;
+import static com.cloneweek.hanghaebnb.util.exception.StatusMsgCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +30,7 @@ public class EmailService {
 
     // 랜덤하게 만든 인증코드 메일로 발송하는 메서드
     public String sendSimpleMessage(String email) throws Exception {
-        if(userRepository.findByEmail(email).isPresent()) {
+        if (userRepository.findByEmail(email).isPresent()) {
             throw new CustomException(EXIST_USER);
         }
         String randomCode = "";
@@ -62,33 +63,33 @@ public class EmailService {
 
         message.addRecipients(MimeMessage.RecipientType.TO, email);
         message.setSubject("hanghaebnb 회원가입 이메일 인증");
-        String msgg="";
-        msgg+= "<div style='margin:100px;'>";
-        msgg+= "<h1> 안녕하세요 hanghaebnb입니다. </h1>";
-        msgg+= "<br>";
-        msgg+= "<p>아래 코드를 회원가입 창으로 돌아가 입력해주세요<p>";
-        msgg+= "<br>";
-        msgg+= "<p>감사합니다!<p>";
-        msgg+= "<br>";
-        msgg+= "<div align='center' style='border:1px solid black; font-family:verdana';>";
-        msgg+= "<h3 style='color:blue;'>회원가입 인증 코드입니다.</h3>";
-        msgg+= "<div style='font-size:130%'>";
-        msgg+= "CODE : <strong>";
-        msgg+= randomCode +"</strong><div><br/> ";
-        msgg+= "</div>";
+        String msgg = "";
+        msgg += "<div style='margin:100px;'>";
+        msgg += "<h1> 안녕하세요 hanghaebnb입니다. </h1>";
+        msgg += "<br>";
+        msgg += "<p>아래 코드를 회원가입 창으로 돌아가 입력해주세요<p>";
+        msgg += "<br>";
+        msgg += "<p>감사합니다!<p>";
+        msgg += "<br>";
+        msgg += "<div align='center' style='border:1px solid black; font-family:verdana';>";
+        msgg += "<h3 style='color:blue;'>회원가입 인증 코드입니다.</h3>";
+        msgg += "<div style='font-size:130%'>";
+        msgg += "CODE : <strong>";
+        msgg += randomCode + "</strong><div><br/> ";
+        msgg += "</div>";
         message.setText(msgg, "utf-8", "html");//내용
-        message.setFrom(new InternetAddress("hanghaebnb@gmail.com","test"));//보내는 사람
+        message.setFrom(new InternetAddress("hanghaebnb@gmail.com", "test"));//보내는 사람
 
         // 메세지 발송
-        try{
+        try {
             emailSender.send(message);
-        }catch(MailException es){
+        } catch (MailException es) {
             es.printStackTrace();
             throw new IllegalArgumentException();
         }
 
         // 만들었던 랜덤코드 DB에 저장하기
-        Code code = new Code(randomCode,email);
+        Code code = new Code(randomCode, email);
         codeRepository.save(code);
         return randomCode;
     }
@@ -100,40 +101,39 @@ public class EmailService {
         String nickname = dto.getNickname();
 
         // DB에 이메일과 닉네임 중복 있는지 체크
-        if(userRepository.findByEmail(email).isPresent()) {
+        if (userRepository.findByEmail(email).isPresent()) {
             throw new CustomException(EXIST_USER);
         }
-        if(userRepository.findByNickname(nickname).isPresent()) {
+        if (userRepository.findByNickname(nickname).isPresent()) {
             throw new CustomException(EXIST_NICK);
         }
 
-        // DB에 회원가입할 데이터 저장
-        User user = new User(email, password, nickname);
+        // DB에 회원가입할 데이터 저장. builder 패턴으로 적용해봄.
+        // User user = new User(email, password, nickname);
+        User user = User.builder().email(email)
+                .kakaoNickname(nickname)
+                .password(password)
+                .build();                              // 생성자 호출
+
         userRepository.save(user);
     }
 
     // 이메일로 받은 랜덤코드 대조
-    public boolean verifyCode(String issuedCode, String email) {
+    public ResponseMsgDto verifyCode(String issuedCode, String email) {
 
         // 리파지토리에서 해당 이메일로 저장된 모든 랜덤코드 불러오기
         // 리파지토리에서 불러온 랜덤코드 중 가장 최신순으로 발행된 코드 찾기
         List<Code> codeList = codeRepository.findByEmail(email);
         long id = 0L;
         for (Code code : codeList) {
-            if(code.getId()>id) {
-                id=code.getId();
+            if (code.getId() > id) {
+                id = code.getId();
             }
         }
 
         // 해당 email로 보낸 가장 최신 랜덤코드 불러오기
         Code code = codeRepository.findByEmailAndId(email, id);
-
-        // 해당 email로 보낸 가장 최신 랜덤코드와 입력한 코드 대조작업
-        Boolean result = false;
-        if(code.getRandomCode().equals(issuedCode)) {
-
-            result =true;
-        }
-        return result;
+        Boolean result = code.getRandomCode().equals(issuedCode);
+        return new ResponseBoolDto(result? MATCH_CODE : UNMATCH_CODE, result);
     }
 }
