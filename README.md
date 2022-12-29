@@ -64,11 +64,80 @@
 
 ------------------------------
 ### 5. 트러블 슈팅
--
--
--
--
--
+<details>
+<summary>@Enablejpaauditing</summary>
+<div markdown="1">
+
+### 문제
+게시글을 수정할 때, CreatedAt/ModifiedAt 값이 null로 반환되는 문제
+![enter image description here](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/7e4c2f09-b4cb-407f-bd15-a7824d0bfa1d/image.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45/20221229/us-west-2/s3/aws4_request&X-Amz-Date=20221229T111214Z&X-Amz-Expires=86400&X-Amz-Signature=f39d0f96f44eb805b81acffb87c180a6f74b28c4aeb3166a359a16dd04107dda&X-Amz-SignedHeaders=host&response-content-disposition=filename=%22image.png%22&x-id=GetObject)
+
+### 해결
+@Enablejpaauditing 어노테이션 추가
+```java
+@EnableJpaAuditing
+@SpringBootApplication
+public class HanghaebnbApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(HanghaebnbApplication.class, args);
+    }
+
+}
+```
+
+</div>
+</details>
+
+<details>
+<summary>필터링 + 페이징 (with Spring Data JPA)</summary>
+<div markdown="1">
+
+### 문제
+페이징과 카테고리별/가격별 조회를 한 번에 하려다보니 쿼리가 복잡해져서 Spring Data JPA의 Query Method만으로는 조회가 어려운 상황이었다.
+@Query 어노테이션과 native query를 이용하여 해결하려 하였으나 native query와 페이징을 함께 사용하기가 까다로웠다.
+
+### 해결
+countQuery를 이용하여 query문을 작성하고, @Param 어노테이션을 함께 사용하여 메서드를 생성하여 해결하였다.
+```java
+@Query(countQuery = "select count(*) from room r where (r.price between :minPrice and :maxPrice) and r.type = :type", nativeQuery = true)
+Page<Room> findByPriceBetweenAndType(@Param("minPrice") int minPrice,
+                                     @Param("maxPrice") int maxPrice,
+                                     @Param("type") String type,
+                                     Pageable pageable);
+```
+
+</div>
+</details>
+
+<details>
+<summary>데이터 전달 시 타입 지정</summary>
+<div markdown="1">
+
+### 문제
+String type으로 매개변수를 받아올 때 공백문자가 섞이는 에러가 발생.
+포스트맨에서 body - text로 놓고 {}없이 그냥 String 썼어야 함. 여태까지는 왜 이런 에러가 발생 안 했는지 생각해보니 여태까지는 dto로 받았었음.
+
+### 해결
+이 문제를 해결하기 위해 제네릭스를 사용해서 해결했다가, 통일성위해 dto로 responsebody로 json형식으로 받아오는 방식으로 바꿈.
+</div>
+</details>
+
+<details>
+<summary>if-else와 try-catch</summary>
+<div markdown="1">
+
+### 문제
+if-else문 내부 throw → 특정 조건에서만 던져지는 exception.
+
+### 해결
+try-catch문으로 변경.
+catch시 try코드에서 어떤 exception이 터질지 알고있으니 그게 맞게 작성해주면 된다. </br>
+? → 지금은 IOException이나 직접만든 CustomException 두개로 catch를 하고있지만 **에러가 더욱 많아지면 계속 해서 catch문을 추가해서 해당하는 에러를 잡아야하나?** </br>
+! → 자바가 기본 제공하는 Exception중 해당 exception이 상속받는 상위 상위 상위 exception이 존재한다 초기에는 적절한 exception을 catch문으로 사용하여 잡으면 넓은 범위의 catch로 핸들링 할 수 있으며 이 범위는 최적화 과정에서 줄여나가면 된다.
+</div>
+</details>
+
 
 ------------------------------
 ### 6. 팀 노션
